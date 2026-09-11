@@ -1,0 +1,68 @@
+.status-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 24px;
+}
+
+.status-form {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.status-form input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.status-form button {
+  padding: 10px 20px;
+  background-color: #6c63ff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.status-form button:hover {
+  background-color: #5750d6;
+}
+
+.not-found {
+  color: #e63946;
+  font-weight: 500;
+}
+
+.complaint-card {
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.status {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.status.resolved {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status.in-progress {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status.pending {
+  background-color: #f8d7da;
+  color: #721c24;
+}
