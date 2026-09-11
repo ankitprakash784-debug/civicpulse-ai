@@ -13,7 +13,7 @@ Analyze the provided image and identify whether it contains one of these civic i
 - pothole
 - garbage
 - broken streetlight
-- water leakage
+- water_leak
 - other
 
 Return ONLY valid JSON in this exact format:
@@ -39,7 +39,7 @@ Rules:
 Department mapping:
 pothole → Road Department
 garbage → Sanitation Department
-streetlight → Electrical Department
+broken_streetlight → Electrical Department
 water_leak → Water Department
 other → General Civic Department
 
@@ -47,7 +47,7 @@ Do not include markdown or explanations outside the JSON.
 `;
 
   const response = await ai.models.generateContent({
-   model: "gemini-3.6-flash",
+    model: "gemini-3.6-flash",
     contents: [
       {
         role: "user",
@@ -55,7 +55,7 @@ Do not include markdown or explanations outside the JSON.
           { text: prompt },
           {
             inlineData: {
-              mimeType: mimeType,
+              mimeType,
               data: imageBase64
             }
           }
