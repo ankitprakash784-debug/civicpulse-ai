@@ -100,3 +100,8 @@
   background-color: rgba(248, 113, 113, 0.15);
   color: #f87171;
 }
+.filter-bar select option,
+.admin-card select option {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}

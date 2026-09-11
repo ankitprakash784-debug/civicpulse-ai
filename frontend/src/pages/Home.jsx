@@ -3,7 +3,7 @@ import './Home.css';
 
 function Home() {
   return (
-    <div className="home-container">
+    <div className="home-container page-fade">
       <section className="hero">
         <span className="hero-badge">AI-Powered Civic Reporting</span>
         <h1>

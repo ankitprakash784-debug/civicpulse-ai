@@ -51,7 +51,7 @@ function AdminDashboard() {
   };
 
   return (
-    <div className="admin-container">
+    <div className="admin-container page-fade">
       <h1>Admin Dashboard</h1>
 
       <div className="filter-bar">

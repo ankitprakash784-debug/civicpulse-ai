@@ -43,7 +43,7 @@ function IssueStatus() {
   };
 
   return (
-    <div className="status-container">
+    <div className="status-container page-fade">
       <h1>Track Your Issue</h1>
       <form className="status-form" onSubmit={handleSearch}>
         <input

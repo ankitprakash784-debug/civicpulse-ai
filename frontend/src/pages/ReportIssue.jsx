@@ -31,7 +31,7 @@ function ReportIssue() {
   };
 
   return (
-    <div className="report-container">
+    <div className="home-container page-fade">
       <h1>Report an Issue</h1>
       <form className="report-form" onSubmit={handleSubmit}>
         <label htmlFor="category">Issue Category</label>
@@ -71,15 +71,21 @@ function ReportIssue() {
           required
         />
 
-        <label htmlFor="image">Upload Photo</label>
-        <input
-          type="file"
-          id="image"
-          name="image"
-          accept="image/*"
-          onChange={handleImageChange}
-          required
-        />
+<label htmlFor="image">Upload Photo</label>
+<div className="file-upload-box">
+  <input
+    type="file"
+    id="image"
+    name="image"
+    accept="image/*"
+    onChange={handleImageChange}
+    required
+  />
+  <label htmlFor="image" className="file-upload-label">
+    <span className="upload-icon">📷</span>
+    <span>{image ? image.name : 'Click to upload or drag a photo here'}</span>
+  </label>
+</div>
 
         {preview && (
           <div className="image-preview">

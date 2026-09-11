@@ -77,3 +77,41 @@
   transform: translateY(-2px);
   box-shadow: 0 0 30px rgba(110, 231, 255, 0.4);
 }
+.file-upload-box {
+  position: relative;
+}
+
+.file-upload-box input[type="file"] {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.file-upload-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px 16px;
+  border: 2px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.file-upload-box:hover .file-upload-label {
+  border-color: var(--accent-cyan);
+  background: rgba(110, 231, 255, 0.04);
+}
+
+.upload-icon {
+  font-size: 1.8rem;
+}
