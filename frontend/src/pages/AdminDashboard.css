@@ -1,33 +1,48 @@
 .admin-container {
-  max-width: 800px;
-  margin: 40px auto;
+  max-width: 850px;
+  margin: 60px auto;
   padding: 24px;
+}
+
+.admin-container h1 {
+  font-size: 2rem;
+  margin-bottom: 28px;
+  color: var(--text-primary);
 }
 
 .filter-bar {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
+  color: var(--text-secondary);
 }
 
 .filter-bar select {
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  font-family: var(--font-body);
 }
 
 .complaints-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
 }
 
 .admin-card {
-  border: 1px solid #eee;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 24px;
+  transition: border-color 0.25s ease;
+}
+
+.admin-card:hover {
+  border-color: var(--border-glow);
 }
 
 .admin-card-header {
@@ -36,32 +51,52 @@
   align-items: center;
 }
 
+.admin-card-header h2 {
+  color: var(--text-primary);
+  font-size: 1.2rem;
+}
+
+.admin-card p {
+  color: var(--text-secondary);
+  margin: 6px 0;
+}
+
+.admin-card label {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 6px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
 .admin-card select {
-  margin-top: 8px;
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  font-family: var(--font-body);
 }
 
 .status {
   display: inline-block;
-  padding: 6px 14px;
+  padding: 6px 16px;
   border-radius: 20px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
 }
 
 .status.resolved {
-  background-color: #d4edda;
-  color: #155724;
+  background-color: rgba(74, 222, 128, 0.15);
+  color: #4ade80;
 }
 
 .status.in-progress {
-  background-color: #fff3cd;
-  color: #856404;
+  background-color: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
 }
 
 .status.pending {
-  background-color: #f8d7da;
-  color: #721c24;
+  background-color: rgba(248, 113, 113, 0.15);
+  color: #f87171;
 }
