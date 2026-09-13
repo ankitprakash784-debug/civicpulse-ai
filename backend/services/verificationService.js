@@ -52,6 +52,7 @@ Rules:
 - safetyRisk must be an integer from 1 to 5
 - confidence must be between 0 and 1
 - resolved must be true only when the civic issue appears meaningfully fixed
+- sameIssue must be true only when the images appear to show the same issue/location
 - Do not include markdown or explanations outside JSON.
 `;
 
@@ -61,7 +62,9 @@ Rules:
       {
         role: "user",
         parts: [
-          { text: prompt },
+          {
+            text: prompt
+          },
           {
             inlineData: {
               mimeType: beforeMimeType,

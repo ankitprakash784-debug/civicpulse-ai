@@ -33,12 +33,79 @@ function AdminDashboard() {
   const [complaints, setComplaints] = useState(initialComplaints);
   const [filter, setFilter] = useState('All');
 
+  const [beforeImage, setBeforeImage] = useState(null);
+  const [afterImage, setAfterImage] = useState(null);
+
+  const [verificationResult, setVerificationResult] = useState(null);
+  const [verificationLoading, setVerificationLoading] = useState(false);
+  const [verificationError, setVerificationError] = useState('');
+
   const handleStatusChange = (id, newStatus) => {
     setComplaints((prev) =>
       prev.map((c) => (c.id === id ? { ...c, status: newStatus } : c))
     );
   };
+  // =========================
+  // AI RESOLUTION VERIFICATION
+  // =========================
 
+  const handleVerifyResolution = async () => {
+    if (!beforeImage || !afterImage) {
+      setVerificationError(
+        'Please upload both before and after images.'
+      );
+      return;
+    }
+
+    setVerificationLoading(true);
+    setVerificationResult(null);
+    setVerificationError('');
+
+    try {
+      const uploadData = new FormData();
+
+      uploadData.append('beforeImage', beforeImage);
+      uploadData.append('afterImage', afterImage);
+
+      const response = await fetch(
+        'http://localhost:5050/api/verify-resolution',
+        {
+          method: 'POST',
+          body: uploadData,
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.message ||
+          'Resolution verification failed'
+        );
+      }
+
+      console.log(
+        'Resolution Verification Result:',
+        result.data
+      );
+
+      setVerificationResult(result.data);
+
+    } catch (err) {
+      console.error(
+        'Resolution Verification Error:',
+        err
+      );
+
+      setVerificationError(
+        err.message ||
+        'Unable to verify resolution.'
+      );
+
+    } finally {
+      setVerificationLoading(false);
+    }
+  };
   const filteredComplaints =
     filter === 'All'
       ? complaints
@@ -68,7 +135,183 @@ function AdminDashboard() {
           <option value="Water Leakage">Water Leakage</option>
         </select>
       </div>
+      {/* =========================
+          RESOLUTION VERIFICATION
+          ========================= */}
 
+      <div className="verification-card">
+
+        <h2>AI Resolution Verification</h2>
+
+        <p>
+          Upload the original issue photo and the
+          after-repair photo to verify whether the
+          issue has actually been resolved.
+        </p>
+
+        <div className="verification-upload-grid">
+
+          <div className="verification-upload">
+            <label htmlFor="beforeImage">
+              Before Repair Photo
+            </label>
+
+            <input
+              type="file"
+              id="beforeImage"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files[0];
+
+                if (file) {
+                  setBeforeImage(file);
+                  setVerificationResult(null);
+                  setVerificationError('');
+                }
+              }}
+            />
+
+            {beforeImage && (
+              <p>
+                Selected: {beforeImage.name}
+              </p>
+            )}
+          </div>
+
+
+          <div className="verification-upload">
+            <label htmlFor="afterImage">
+              After Repair Photo
+            </label>
+
+            <input
+              type="file"
+              id="afterImage"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files[0];
+
+                if (file) {
+                  setAfterImage(file);
+                  setVerificationResult(null);
+                  setVerificationError('');
+                }
+              }}
+            />
+
+            {afterImage && (
+              <p>
+                Selected: {afterImage.name}
+              </p>
+            )}
+          </div>
+
+        </div>
+
+
+        {verificationError && (
+          <div className="verification-error">
+            {verificationError}
+          </div>
+        )}
+
+
+        <button
+          type="button"
+          className="verify-resolution-btn"
+          onClick={handleVerifyResolution}
+          disabled={verificationLoading}
+        >
+          {verificationLoading
+            ? 'Verifying with AI...'
+            : 'Verify Resolution with AI'}
+        </button>
+
+      </div>
+            {/* =========================
+          VERIFICATION RESULT
+          ========================= */}
+
+      {verificationResult && (
+        <div className="verification-result-card">
+
+          <div className="verification-result-header">
+            <span>
+              {verificationResult.resolved ? '✅' : '❌'}
+            </span>
+
+            <h2>
+              {verificationResult.resolved
+                ? 'Issue Resolved'
+                : 'Issue Not Resolved'}
+            </h2>
+          </div>
+
+          <div className="verification-result-grid">
+
+            <div>
+              <span>Issue Type</span>
+              <strong>
+                {verificationResult.issueType}
+              </strong>
+            </div>
+
+            <div>
+              <span>Confidence</span>
+              <strong>
+                {(verificationResult.confidence * 100).toFixed(0)}%
+              </strong>
+            </div>
+
+            <div>
+              <span>Before Severity</span>
+              <strong>
+                {verificationResult.beforeSeverity}/5
+              </strong>
+            </div>
+
+            <div>
+              <span>After Severity</span>
+              <strong>
+                {verificationResult.afterSeverity}/5
+              </strong>
+            </div>
+
+            <div>
+              <span>Before Safety Risk</span>
+              <strong>
+                {verificationResult.beforeSafetyRisk}/5
+              </strong>
+            </div>
+
+            <div>
+              <span>After Safety Risk</span>
+              <strong>
+                {verificationResult.afterSafetyRisk}/5
+              </strong>
+            </div>
+
+            <div>
+              <span>Same Issue</span>
+              <strong>
+                {verificationResult.sameIssue ? 'Yes' : 'No'}
+              </strong>
+            </div>
+
+          </div>
+
+          <div className="verification-reason">
+
+            <span>AI Verification Reason</span>
+
+            <p>
+              {verificationResult.reason}
+            </p>
+
+          </div>
+
+        </div>
+      )}
       <div className="complaints-list">
         {filteredComplaints.length === 0 && (
           <p>No complaints found for this category.</p>
