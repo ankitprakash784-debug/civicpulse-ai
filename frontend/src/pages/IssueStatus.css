@@ -1,0 +1,94 @@
+.status-container {
+  max-width: 600px;
+  margin: 60px auto;
+  padding: 24px;
+}
+
+.status-container h1 {
+  font-size: 2rem;
+  margin-bottom: 28px;
+  color: var(--text-primary);
+}
+
+.status-form {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.status-form input {
+  flex: 1;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+}
+
+.status-form input:focus {
+  outline: none;
+  border-color: var(--accent-cyan);
+}
+
+.status-form button {
+  padding: 12px 26px;
+  background: var(--gradient-primary);
+  color: #0a0e1a;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.25s ease;
+}
+
+.status-form button:hover {
+  transform: translateY(-2px);
+}
+
+.not-found {
+  color: #ff6b81;
+  font-weight: 500;
+}
+
+.complaint-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.complaint-card h2 {
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.complaint-card p {
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.status {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.status.resolved {
+  background-color: rgba(74, 222, 128, 0.15);
+  color: #4ade80;
+}
+
+.status.in-progress {
+  background-color: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+}
+
+.status.pending {
+  background-color: rgba(248, 113, 113, 0.15);
+  color: #f87171;
+}
