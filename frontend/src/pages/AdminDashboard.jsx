@@ -39,7 +39,7 @@ function AdminDashboard() {
   const [verificationResult, setVerificationResult] = useState(null);
   const [verificationLoading, setVerificationLoading] = useState(false);
   const [verificationError, setVerificationError] = useState('');
-
+  const [selectedComplaintId, setSelectedComplaintId] = useState('');
   const handleStatusChange = (id, newStatus) => {
     setComplaints((prev) =>
       prev.map((c) => (c.id === id ? { ...c, status: newStatus } : c))
@@ -90,7 +90,24 @@ function AdminDashboard() {
       );
 
       setVerificationResult(result.data);
-
+      // Automatically mark selected complaint as Resolved
+      // when AI confirms that the issue is actually fixed.
+      if (
+        result.data.resolved &&
+        result.data.sameIssue &&
+        selectedComplaintId
+      ) {
+        setComplaints((prev) =>
+          prev.map((complaint) =>
+            complaint.id === selectedComplaintId
+              ? {
+                  ...complaint,
+                  status: 'Resolved',
+                }
+              : complaint
+          )
+        );
+      }
     } catch (err) {
       console.error(
         'Resolution Verification Error:',
@@ -142,7 +159,32 @@ function AdminDashboard() {
       <div className="verification-card">
 
         <h2>AI Resolution Verification</h2>
+        <label htmlFor="verificationComplaint">
+          Select Complaint
+        </label>
 
+        <select
+          id="verificationComplaint"
+          value={selectedComplaintId}
+          onChange={(e) => {
+            setSelectedComplaintId(e.target.value);
+            setVerificationResult(null);
+            setVerificationError('');
+          }}
+        >
+          <option value="">
+            -- Select Complaint --
+          </option>
+
+          {complaints.map((complaint) => (
+            <option
+              key={complaint.id}
+              value={complaint.id}
+            >
+              {complaint.id} — {complaint.category}
+            </option>
+          ))}
+        </select>
         <p>
           Upload the original issue photo and the
           after-repair photo to verify whether the
