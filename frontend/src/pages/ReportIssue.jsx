@@ -20,6 +20,9 @@ function ReportIssue() {
   const [complaint, setComplaint] = useState('');
   const [complaintLoading, setComplaintLoading] = useState(false);
 
+  const [duplicateResult, setDuplicateResult] = useState(null);
+  const [duplicateLoading, setDuplicateLoading] = useState(false);
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -28,16 +31,17 @@ function ReportIssue() {
   };
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
+  const file = e.target.files[0];
 
-    if (file) {
-      setImage(file);
-      setPreview(URL.createObjectURL(file));
-      setAiResult(null);
-      setComplaint('');
-      setError('');
-    }
-  };
+  if (file) {
+    setImage(file);
+    setPreview(URL.createObjectURL(file));
+    setAiResult(null);
+    setComplaint('');
+    setDuplicateResult(null);
+    setError('');
+  }
+};
 
   // =========================
   // AI IMAGE ANALYSIS
@@ -154,6 +158,81 @@ function ReportIssue() {
       );
     } finally {
       setComplaintLoading(false);
+    }
+  };
+    // =========================
+  // DUPLICATE COMPLAINT CHECK
+  // =========================
+
+  const handleCheckDuplicate = async () => {
+    if (!aiResult) {
+      return;
+    }
+
+    setDuplicateLoading(true);
+    setDuplicateResult(null);
+    setError('');
+
+    try {
+      const response = await fetch(
+        `${API_URL}/api/check-duplicate`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            newComplaint: {
+              issueType: aiResult.issueType,
+              description: formData.description,
+            },
+
+            // Demo existing complaints
+            existingComplaints: [
+              {
+                id: 'CP001',
+                issueType: 'pothole',
+                description:
+                  'Large pothole on the road causing danger to vehicles',
+              },
+              {
+                id: 'CP002',
+                issueType: 'garbage',
+                description:
+                  'Garbage and waste dumped near the roadside',
+              },
+            ],
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.message || 'Duplicate check failed'
+        );
+      }
+
+      console.log(
+        'Duplicate Detection Result:',
+        result.data
+      );
+
+      setDuplicateResult(result.data);
+
+    } catch (err) {
+      console.error(
+        'Duplicate Detection Error:',
+        err
+      );
+
+      setError(
+        err.message ||
+        'Unable to check duplicate complaints.'
+      );
+    } finally {
+      setDuplicateLoading(false);
     }
   };
 
@@ -402,7 +481,16 @@ function ReportIssue() {
             </p>
 
           </div>
-
+<button
+  type="button"
+  className="generate-complaint-btn"
+  onClick={handleCheckDuplicate}
+  disabled={duplicateLoading}
+>
+  {duplicateLoading
+    ? 'Checking Duplicate...'
+    : 'Check Duplicate Complaint'}
+</button>
 
           {/* GENERATE COMPLAINT BUTTON */}
 
@@ -416,6 +504,62 @@ function ReportIssue() {
               ? 'Generating Complaint...'
               : 'Generate Complaint'}
           </button>
+
+        </div>
+      )}
+            {/* =========================
+          DUPLICATE RESULT
+          ========================= */}
+
+      {duplicateResult && (
+        <div className="complaint-result-card">
+
+          <div className="complaint-header">
+            <span>
+              {duplicateResult.isDuplicate ? '⚠️' : '✅'}
+            </span>
+
+            <h2>
+              {duplicateResult.isDuplicate
+                ? 'Duplicate Complaint Detected'
+                : 'No Duplicate Found'}
+            </h2>
+          </div>
+
+          <div className="ai-description">
+
+            <p>
+              {duplicateResult.reason}
+            </p>
+
+            {duplicateResult.isDuplicate && (
+              <p>
+                <strong>
+                  Existing Complaint:
+                </strong>{' '}
+                {duplicateResult.duplicateComplaintId}
+              </p>
+            )}
+
+            {duplicateResult.distanceInKm !== undefined && (
+              <p>
+                <strong>
+                  Distance:
+                </strong>{' '}
+                {duplicateResult.distanceInKm} km
+              </p>
+            )}
+
+            {duplicateResult.similarity !== undefined && (
+              <p>
+                <strong>
+                  Description Similarity:
+                </strong>{' '}
+                {(duplicateResult.similarity * 100).toFixed(0)}%
+              </p>
+            )}
+
+          </div>
 
         </div>
       )}
