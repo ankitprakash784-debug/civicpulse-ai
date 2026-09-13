@@ -300,3 +300,109 @@
     grid-template-columns: 1fr;
   }
 }
+/* =========================================
+   VERIFICATION SELECT + FILE INPUT THEME
+   ========================================= */
+
+/* Select Complaint */
+#verificationComplaint {
+  width: 100%;
+  box-sizing: border-box;
+
+  margin-top: 10px;
+  margin-bottom: 20px;
+
+  padding: 13px 16px;
+
+  border-radius: 10px;
+  border: 1px solid rgba(130, 140, 220, 0.35);
+
+  background: rgba(20, 26, 55, 0.95);
+  color: #f8fafc;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  outline: none;
+  cursor: pointer;
+
+  appearance: auto;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+#verificationComplaint:hover {
+  border-color: rgba(103, 232, 249, 0.6);
+}
+
+#verificationComplaint:focus {
+  border-color: #67e8f9;
+
+  box-shadow:
+    0 0 0 3px rgba(103, 232, 249, 0.12);
+}
+
+/* Dropdown options */
+#verificationComplaint option {
+  background: #151a38;
+  color: #f8fafc;
+  padding: 10px;
+}
+
+
+/* =========================================
+   BEFORE / AFTER FILE INPUT
+   ========================================= */
+
+.verification-upload input[type="file"] {
+  width: 100%;
+  box-sizing: border-box;
+
+  margin-top: 10px;
+
+  padding: 10px;
+
+  border-radius: 10px;
+  border: 1px solid rgba(130, 140, 220, 0.3);
+
+  background: rgba(20, 26, 55, 0.9);
+
+  color: #cbd5e1;
+
+  font-size: 14px;
+}
+
+
+/* Choose File button */
+.verification-upload input[type="file"]::file-selector-button {
+  margin-right: 12px;
+
+  padding: 9px 16px;
+
+  border: 1px solid rgba(130, 140, 220, 0.5);
+  border-radius: 8px;
+
+  background: linear-gradient(
+    90deg,
+    #67e8f9,
+    #a78bfa
+  );
+
+  color: #0f172a;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.verification-upload input[type="file"]::file-selector-button:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
