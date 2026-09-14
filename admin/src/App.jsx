@@ -2,6 +2,7 @@ import { useState } from "react";
 import Reports from "./pages/Reports";
 import Analytics from "./pages/Analytics";
 import Login from "./pages/Login";
+import GoogleMap from "./GoogleMap";
 import "./App.css";
 
 function App() {
@@ -360,18 +361,7 @@ if (notification.id === 2) {
         🗺️ Civic Issue Map
       </div>
 
-      <div className="map-area">
-
-        <div className="map-road road-1"></div>
-        <div className="map-road road-2"></div>
-        <div className="map-road road-3"></div>
-
-        <div className="map-marker marker-1">🕳️</div>
-        <div className="map-marker marker-2">🗑️</div>
-        <div className="map-marker marker-3">💡</div>
-        <div className="map-marker marker-4">💧</div>
-
-      </div>
+      <GoogleMap />
 
     </div>
 
