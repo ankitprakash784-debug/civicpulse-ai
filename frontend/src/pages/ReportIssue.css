@@ -115,3 +115,316 @@
 .upload-icon {
   font-size: 1.8rem;
 }
+.location-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.location-input-wrapper input {
+  width: 100%;
+  padding-right: 50px;
+  box-sizing: border-box;
+}
+
+.location-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.location-button:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+/* ================================
+   CIVICPULSE REPORT ISSUE - UPGRADE
+   ================================ */
+
+.report-container {
+  position: relative;
+  max-width: 680px;
+  margin: 55px auto;
+  padding: 42px;
+
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(56, 189, 248, 0.08),
+      transparent 35%
+    ),
+    rgba(8, 18, 34, 0.82);
+
+  border: 1px solid rgba(56, 189, 248, 0.16);
+
+  border-radius: 22px;
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.30);
+
+  backdrop-filter: blur(16px);
+}
+
+
+/* Heading */
+
+.report-container h1 {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+
+  background: linear-gradient(
+    90deg,
+    #f8fafc,
+    #67e8f9,
+    #a78bfa
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  color: transparent;
+}
+
+.report-container h1::after {
+  content: "Help make your city cleaner and greener.";
+
+  display: block;
+
+  margin-top: 9px;
+
+  font-size: 13px;
+  font-weight: 400;
+
+  color: #8193ad;
+
+  background: none;
+
+  -webkit-text-fill-color: #8193ad;
+}
+
+
+/* Labels */
+
+.report-form label {
+  color: #b8c6d9;
+
+  font-weight: 600;
+
+  letter-spacing: 0.2px;
+}
+
+
+/* Inputs */
+
+.report-form select,
+.report-form textarea,
+.report-form input[type="text"] {
+  background: rgba(5, 15, 30, 0.65);
+
+  border: 1px solid rgba(100, 160, 210, 0.18);
+
+  color: #e8f0fa;
+
+  border-radius: 12px;
+
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+.report-form select:hover,
+.report-form textarea:hover,
+.report-form input[type="text"]:hover {
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.report-form select:focus,
+.report-form textarea:focus,
+.report-form input[type="text"]:focus {
+  border-color: #38d9ff;
+
+  background: rgba(8, 23, 42, 0.85);
+
+  box-shadow:
+    0 0 0 3px rgba(56, 189, 248, 0.08),
+    0 0 20px rgba(56, 189, 248, 0.06);
+}
+
+
+/* Location */
+
+.location-input-wrapper input {
+  padding-right: 55px;
+}
+
+.location-button {
+  color: #67e8f9;
+
+  border-radius: 8px;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.location-button:hover {
+  background: rgba(56, 189, 248, 0.10);
+
+  box-shadow:
+    0 0 15px rgba(56, 189, 248, 0.15);
+}
+
+
+/* Upload Box */
+
+.file-upload-label {
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(34, 197, 94, 0.06),
+      transparent 55%
+    );
+
+  border-color: rgba(100, 160, 210, 0.20);
+
+  border-radius: 14px;
+
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.file-upload-box:hover .file-upload-label {
+  border-color: #38d9ff;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(56, 189, 248, 0.09),
+      transparent 60%
+    );
+
+  transform: translateY(-2px);
+}
+
+.upload-icon {
+  filter:
+    drop-shadow(0 0 8px rgba(56, 189, 248, 0.35));
+}
+
+
+/* Preview */
+
+.image-preview img {
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+
+/* Submit */
+
+.submit-btn {
+  background:
+    linear-gradient(
+      110deg,
+      #38d9ff,
+      #6366f1,
+      #a855f7
+    );
+
+  color: white;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 8px 30px rgba(59, 130, 246, 0.22);
+}
+
+.submit-btn:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 12px 35px rgba(59, 130, 246, 0.40);
+}
+/* ================================
+   ENVIRONMENTAL BACKGROUND
+   ================================ */
+
+.report-container {
+  background:
+    radial-gradient(
+      circle at 10% 20%,
+      rgba(34, 197, 94, 0.10),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 90% 75%,
+      rgba(56, 189, 248, 0.10),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 50% 100%,
+      rgba(168, 85, 247, 0.08),
+      transparent 35%
+    ),
+    rgba(8, 18, 34, 0.82);
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.35),
+    0 0 50px rgba(34, 197, 94, 0.04);
+}
+
+
+/* Green environmental glow */
+
+.report-container::before {
+  content: "🌿";
+
+  position: absolute;
+
+  left: -55px;
+  bottom: 70px;
+
+  font-size: 75px;
+
+  opacity: 0.18;
+
+  filter:
+    blur(1px)
+    drop-shadow(0 0 15px rgba(34, 197, 94, 0.7));
+
+  transform: rotate(-20deg);
+
+  pointer-events: none;
+}
+
+
+/* Cyan leaf decoration */
+
+.report-container::after {
+  content: "🍃";
+
+  position: absolute;
+
+  right: -45px;
+  top: 70px;
+
+  font-size: 65px;
+
+  opacity: 0.16;
+
+  filter:
+    drop-shadow(0 0 15px rgba(56, 189, 248, 0.7));
+
+  transform: rotate(25deg);
+
+  pointer-events: none;
+}

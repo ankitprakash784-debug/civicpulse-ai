@@ -3,7 +3,46 @@ import { useState } from "react";
 function Reports() {
   const [selectedReport, setSelectedReport] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [locationLoading, setLocationLoading] = useState(false);
   const [statusFilter, setStatusFilter] = useState("All");
+    const getCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by this browser.");
+      return;
+    }
+
+    setLocationLoading(true);
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+
+        setCurrentLocation({
+          latitude,
+          longitude,
+        });
+
+        setLocationLoading(false);
+
+        console.log("Current Location:", latitude, longitude);
+      },
+      (error) => {
+        console.error("Location Error:", error);
+
+        setLocationLoading(false);
+
+        alert(
+          "Unable to get your current location. Please allow location access."
+        );
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      }
+    );
+  };
   const [beforePhoto, setBeforePhoto] = useState(null);
   const [afterPhoto, setAfterPhoto] = useState(null); 
   const [aiVerified, setAiVerified] = useState(false);
@@ -173,9 +212,17 @@ function Reports() {
               {report.issue}
             </span>
 
-            <span>
-              {report.location}
-            </span>
+           <span className="location-cell">
+            {report.location}
+
+            <button
+              className="location-button"
+              onClick={getCurrentLocation}
+              title="Get current location"
+            >
+              {locationLoading ? "⏳" : "📍"}
+            </button>
+          </span>
 
             <span
   className={`priority-badge ${

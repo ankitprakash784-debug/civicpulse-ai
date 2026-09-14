@@ -14,6 +14,32 @@ function ReportIssue() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const getCurrentLocation = () => {
+  if (!navigator.geolocation) {
+    alert('Geolocation is not supported by your browser.');
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const { latitude, longitude } = position.coords;
+
+      setFormData((prev) => ({
+        ...prev,
+        location: `${latitude}, ${longitude}`,
+      }));
+    },
+    () => {
+      alert('Location access allow karo, phir dobara 📍 button dabao.');
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0,
+    }
+  );
+};
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -31,7 +57,7 @@ function ReportIssue() {
   };
 
   return (
-    <div className="home-container page-fade">
+    <div className="report-container page-fade">
       <h1>Report an Issue</h1>
       <form className="report-form" onSubmit={handleSubmit}>
         <label htmlFor="category">Issue Category</label>
@@ -61,15 +87,26 @@ function ReportIssue() {
         ></textarea>
 
         <label htmlFor="location">Location</label>
-        <input
-          type="text"
-          id="location"
-          name="location"
-          placeholder="Enter address or landmark"
-          value={formData.location}
-          onChange={handleChange}
-          required
-        />
+        <div className="location-input-wrapper">
+  <input
+    type="text"
+    id="location"
+    name="location"
+    placeholder="Enter address or landmark"
+    value={formData.location}
+    onChange={handleChange}
+    required
+  />
+
+  <button
+    type="button"
+    className="location-button"
+    onClick={getCurrentLocation}
+    title="Use my current location"
+  >
+    📍
+  </button>
+</div>
 
 <label htmlFor="image">Upload Photo</label>
 <div className="file-upload-box">
