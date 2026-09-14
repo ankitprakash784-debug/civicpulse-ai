@@ -13,17 +13,18 @@ async function analyzeImage(req, res) {
     const imageBase64 = req.file.buffer.toString("base64");
     const mimeType = req.file.mimetype;
 
-    // AI image analysis
+    // Step 1: Analyze image using Gemini
     const result = await analyzeCivicImage(
       imageBase64,
       mimeType
     );
 
-    // Calculate civic priority
+    // Step 2: Calculate priority
+    // Currently using 3 as demo affected-people value.
     const priorityResult = calculatePriority(
       result.severity,
       result.safetyRisk,
-      1
+      3
     );
 
     return res.json({
