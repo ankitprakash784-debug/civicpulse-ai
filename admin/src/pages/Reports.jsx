@@ -1,46 +1,82 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function Reports() {
   const [selectedReport, setSelectedReport] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [beforePhoto, setBeforePhoto] = useState(null);
-  const [afterPhoto, setAfterPhoto] = useState(null); 
+const [afterPhoto, setAfterPhoto] = useState(null);
+
+const [beforePhotoPreview, setBeforePhotoPreview] = useState(null);
+const [afterPhotoPreview, setAfterPhotoPreview] = useState(null);
+
+const [verificationResult, setVerificationResult] = useState(null);
   const [aiVerified, setAiVerified] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
   const [updatedStatus, setUpdatedStatus] = useState("");
   const [showStatusDropdown, setShowStatusDropdown] = useState(false);
-  const [reports, setReports] = useState([
-    {
-      id: 1,
-      issue: "🕳️ Pothole",
-      location: "Main Road",
-      priority: 92,
-      status: "Pending",
-    },
-    {
-      id: 2,
-      issue: "🗑️ Garbage",
-      location: "Sector 15",
-      priority: 67,
-      status: "In Progress",
-    },
-    {
-      id: 3,
-      issue: "💡 Streetlight",
-      location: "Market Road",
-      priority: 54,
-      status: "Resolved",
-    },
-    {
-      id: 4,
-      issue: "🚰 Water Leakage",
-      location: "Sector 12",
-      priority: 81,
-      status: "Pending",
-    },
-  ]);
+  const [reports, setReports] = useState([]);
+  const [loadingReports, setLoadingReports] = useState(true);
+  const [reportsError, setReportsError] = useState("");
+useEffect(() => {
+  const fetchReports = async () => {
+    try {
+      setLoadingReports(true);
+      setReportsError("");
 
+      const response = await fetch(
+        "http://localhost:5050/api/complaints"
+      );
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.message || "Failed to fetch complaints"
+        );
+      }
+
+      const formattedReports = result.data.map((complaint) => ({
+        id: complaint.id,
+        photoUrl: complaint.photoUrl || null,
+        issue: getIssueLabel(complaint.issueType),
+        location: complaint.location || "Location not provided",
+        priority: complaint.priorityScore || 0,
+        priorityLevel: complaint.priority || "LOW",
+        status: complaint.status || "Pending",
+        department: complaint.department,
+        description: complaint.description,
+        severity: complaint.severity,
+        safetyRisk: complaint.safetyRisk,
+        confidence: complaint.confidence,
+        complaintText: complaint.complaintText,
+        createdAt: complaint.createdAt,
+      }));
+
+      setReports(formattedReports);
+    } catch (error) {
+      console.error("Reports fetch error:", error);
+      setReportsError(error.message);
+    } finally {
+      setLoadingReports(false);
+    }
+  };
+
+  fetchReports();
+}, []);
+
+const getIssueLabel = (issueType) => {
+  const issueMap = {
+    pothole: "🕳️ Pothole",
+    garbage: "🗑️ Garbage",
+    broken_streetlight: "💡 Streetlight",
+    water_leak: "🚰 Water Leakage",
+    water_leakage: "🚰 Water Leakage",
+    other: "🏙️ Other",
+  };
+
+  return issueMap[issueType] || "🏙️ Other";
+};
   return (
     <div className="reports-page">
 
@@ -147,6 +183,17 @@ function Reports() {
       </div>
 
       <div className="all-reports">
+{loadingReports && (
+  <p style={{ padding: "20px" }}>
+    Loading reports...
+  </p>
+)}
+
+{reportsError && (
+  <p style={{ padding: "20px" }}>
+    ❌ {reportsError}
+  </p>
+)}
 
         <div className="report-header">
           <span>Issue</span>
@@ -179,18 +226,10 @@ function Reports() {
 
             <span
   className={`priority-badge ${
-    report.priority >= 80
-      ? "high"
-      : report.priority >= 50
-      ? "medium"
-      : "low"
+    report.priorityLevel?.toLowerCase() || "low"
   }`}
 >
-  {report.priority >= 80
-    ? "High"
-    : report.priority >= 50
-    ? "Medium"
-    : "Low"}
+  {report.priorityLevel || "Low"}
 </span>
 
             <span className="status">
@@ -231,7 +270,25 @@ function Reports() {
     <div className="details-content">
 
       <h3>{selectedReport.issue}</h3>
+{selectedReport.photoUrl && (
+  <div style={{ marginTop: "20px", marginBottom: "20px" }}>
+    <h3>📸 Citizen Report Photo</h3>
 
+    <img
+      src={`http://localhost:5050${selectedReport.photoUrl}`}
+      alt="Citizen reported issue"
+      style={{
+        width: "100%",
+        maxWidth: "500px",
+        maxHeight: "350px",
+        objectFit: "cover",
+        borderRadius: "12px",
+        border: "1px solid #ddd",
+        display: "block",
+      }}
+    />
+  </div>
+)}
       <div className="issue-summary-cards">
 
   <div className="issue-summary-card">
@@ -292,19 +349,52 @@ function Reports() {
 </div>
 <button
   className="save-status-button"
-  onClick={() => {
-    setReports(
-      reports.map((report) =>
-        report.id === selectedReport.id
-          ? { ...report, status: updatedStatus }
-          : report
-      )
-    );
+  onClick={async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5050/api/complaints/${selectedReport.id}/status`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            status: updatedStatus,
+          }),
+        }
+      );
 
-    setSelectedReport({
-      ...selectedReport,
-      status: updatedStatus,
-    });
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.message || "Failed to update status"
+        );
+      }
+
+      // Update report list in UI
+      setReports((prevReports) =>
+        prevReports.map((report) =>
+          report.id === selectedReport.id
+            ? {
+                ...report,
+                status: updatedStatus,
+              }
+            : report
+        )
+      );
+
+      // Update selected report
+      setSelectedReport((prevReport) => ({
+        ...prevReport,
+        status: updatedStatus,
+      }));
+
+      alert("✅ Status updated successfully!");
+    } catch (error) {
+      console.error("Status update error:", error);
+      alert(`❌ Failed to update status: ${error.message}`);
+    }
   }}
 >
   ✓ Save Status
@@ -317,9 +407,9 @@ function Reports() {
   <div className="verification-photos">
 
     <div className="photo-box">
-  {beforePhoto ? (
+  {beforePhotoPreview ? (
     <img
-      src={beforePhoto}
+      src={beforePhotoPreview}
       alt="Before issue"
       className="verification-image"
     />
@@ -338,20 +428,23 @@ function Reports() {
       type="file"
       accept="image/*"
       onChange={(e) => {
-        const file = e.target.files[0];
+  const file = e.target.files[0];
 
-        if (file) {
-          setBeforePhoto(URL.createObjectURL(file));
-        }
-      }}
+  if (file) {
+    setBeforePhoto(file);
+    setBeforePhotoPreview(URL.createObjectURL(file));
+    setAiVerified(false);
+    setVerificationResult(null);
+  }
+}}
     />
   </label>
 </div>
 
     <div className="photo-box">
-  {afterPhoto ? (
+  {afterPhotoPreview ? (
     <img
-      src={afterPhoto}
+      src={afterPhotoPreview}
       alt="After issue"
       className="verification-image"
     />
@@ -370,12 +463,15 @@ function Reports() {
       type="file"
       accept="image/*"
       onChange={(e) => {
-        const file = e.target.files[0];
+  const file = e.target.files[0];
 
-        if (file) {
-          setAfterPhoto(URL.createObjectURL(file));
-        }
-      }}
+  if (file) {
+    setAfterPhoto(file);
+    setAfterPhotoPreview(URL.createObjectURL(file));
+    setAiVerified(false);
+    setVerificationResult(null);
+  }
+}}
     />
   </label>
 </div>
@@ -385,28 +481,134 @@ function Reports() {
  <div className="verification-result">
   <span>Verification Status</span>
 
-  {aiVerified ? (
-    <div className="ai-success-result">
-      <strong>✅ Verified</strong>
-      <p>Issue appears to be successfully resolved.</p>
-      <small>AI Confidence: 94%</small>
-    </div>
-  ) : (
-    <strong>⏳ Waiting for AI Verification</strong>
-  )}
+  {verificationResult ? (
+  <div className="ai-success-result">
+    <strong>
+      {verificationResult.resolved &&
+      verificationResult.sameIssue
+        ? "✅ Verified"
+        : "❌ Not Resolved"}
+    </strong>
+
+    <p>{verificationResult.reason}</p>
+
+    <small>
+      AI Confidence:{" "}
+      {Math.round(
+        verificationResult.confidence * 100
+      )}
+      %
+    </small>
+
+    <small>
+      Before Severity:{" "}
+      {verificationResult.beforeSeverity}/5
+    </small>
+
+    <small>
+      After Severity:{" "}
+      {verificationResult.afterSeverity}/5
+    </small>
+  </div>
+) : (
+  <strong>⏳ Waiting for AI Verification</strong>
+)}
 </div>
  <button
-  className={`verify-button ${aiVerified ? "verification-complete" : ""}`}
-  onClick={() => {
-    setAiLoading(true);
-    setAiVerified(false);
+  className={`verify-button ${
+    aiVerified ? "verification-complete" : ""
+  }`}
+  onClick={async () => {
+    try {
+      setAiLoading(true);
+      setAiVerified(false);
+      setVerificationResult(null);
 
-    setTimeout(() => {
+      const formData = new FormData();
+
+      formData.append("beforeImage", beforePhoto);
+      formData.append("afterImage", afterPhoto);
+
+      const response = await fetch(
+        "http://localhost:5050/api/verify-resolution",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.message || "AI verification failed"
+        );
+      }
+
+      console.log("AI Verification Result:", result);
+
+      setVerificationResult(result.data);
+
+      if (
+        result.data.resolved &&
+        result.data.sameIssue &&
+        selectedReport?.id
+      ) {
+        const statusResponse = await fetch(
+          `http://localhost:5050/api/complaints/${selectedReport.id}/status`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              status: "Resolved",
+            }),
+          }
+        );
+
+        const statusResult = await statusResponse.json();
+
+        if (!statusResponse.ok || !statusResult.success) {
+          throw new Error(
+            statusResult.message ||
+              "Failed to update complaint status"
+          );
+        }
+
+        setReports((prevReports) =>
+          prevReports.map((report) =>
+            report.id === selectedReport.id
+              ? {
+                  ...report,
+                  status: "Resolved",
+                }
+              : report
+          )
+        );
+
+        setSelectedReport((prevReport) => ({
+          ...prevReport,
+          status: "Resolved",
+        }));
+
+        setUpdatedStatus("Resolved");
+        setAiVerified(true);
+      }
+    } catch (error) {
+      console.error("AI verification error:", error);
+
+      alert(`❌ Verification failed: ${error.message}`);
+    } finally {
       setAiLoading(false);
-      setAiVerified(true);
-    }, 2000);
+    }
   }}
-  disabled={!beforePhoto || !afterPhoto || aiLoading || aiVerified}
+  disabled={
+    !beforePhoto ||
+    !afterPhoto ||
+    aiLoading ||
+    aiVerified
+  }
 >
   {aiLoading
     ? "⏳ AI is analyzing..."
@@ -421,7 +623,14 @@ function Reports() {
   <h3>Issue Timeline</h3>
   <div className="current-status">
   <span>Current Status</span>
-  <strong>🟠 Work In Progress</strong>
+
+  <strong>
+    {selectedReport.status === "Resolved"
+      ? "🟢 Resolved"
+      : selectedReport.status === "In Progress"
+      ? "🟠 Work In Progress"
+      : "🟡 Pending"}
+  </strong>
 </div>
 
   <div className="timeline">
@@ -459,37 +668,80 @@ function Reports() {
     </div>
 
 
-    <div className="timeline-item active">
-      <div className="timeline-dot">●</div>
+    <div
+  className={`timeline-item ${
+    selectedReport.status === "In Progress" ||
+    selectedReport.status === "Resolved"
+      ? "completed"
+      : "active"
+  }`}
+>
+  <div className="timeline-dot">
+    {selectedReport.status === "Resolved" ? "✓" : "●"}
+  </div>
 
-      <div className="timeline-content">
-        <strong>Work In Progress</strong>
-        <span>Department is working on the issue</span>
-        <small>12:20 PM</small>
-      </div>
-    </div>
+  <div className="timeline-content">
+    <strong>Work In Progress</strong>
+    <span>Department is working on the issue</span>
+    <small>
+      {selectedReport.status === "Pending"
+        ? "Pending"
+        : "Completed"}
+    </small>
+  </div>
+</div>
 
+<div
+  className={`timeline-item ${
+    selectedReport.status === "Resolved"
+      ? "completed"
+      : ""
+  }`}
+>
+  <div className="timeline-dot">
+    {selectedReport.status === "Resolved" ? "✓" : "○"}
+  </div>
 
-    <div className="timeline-item">
-      <div className="timeline-dot">○</div>
+  <div className="timeline-content">
+    <strong>Resolution Submitted</strong>
+    <span>
+      {selectedReport.status === "Resolved"
+        ? "Repair completion submitted"
+        : "Waiting for repair completion"}
+    </span>
+    <small>
+      {selectedReport.status === "Resolved"
+        ? "Completed"
+        : "Pending"}
+    </small>
+  </div>
+</div>
 
-      <div className="timeline-content">
-        <strong>Resolution Submitted</strong>
-        <span>Waiting for repair completion</span>
-        <small>Pending</small>
-      </div>
-    </div>
+<div
+  className={`timeline-item ${
+    selectedReport.status === "Resolved"
+      ? "completed"
+      : ""
+  }`}
+>
+  <div className="timeline-dot">
+    {selectedReport.status === "Resolved" ? "✓" : "○"}
+  </div>
 
-
-    <div className="timeline-item">
-      <div className="timeline-dot">○</div>
-
-      <div className="timeline-content">
-        <strong>AI Verification</strong>
-        <span>Before/after photos will be verified</span>
-        <small>Pending</small>
-      </div>
-    </div>
+  <div className="timeline-content">
+    <strong>AI Verification</strong>
+    <span>
+      {selectedReport.status === "Resolved"
+        ? "Before/after photos verified by AI"
+        : "Before/after photos will be verified"}
+    </span>
+    <small>
+      {selectedReport.status === "Resolved"
+        ? "Verified"
+        : "Pending"}
+    </small>
+  </div>
+</div>
 
   </div>
 

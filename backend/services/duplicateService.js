@@ -28,8 +28,42 @@ function normalizeText(text = "") {
 }
 
 function calculateTextSimilarity(text1, text2) {
-  const words1 = new Set(normalizeText(text1));
-  const words2 = new Set(normalizeText(text2));
+  const stopWords = new Set([
+    "the",
+    "a",
+    "an",
+    "on",
+    "in",
+    "near",
+    "at",
+    "to",
+    "and",
+    "of",
+    "with",
+    "for",
+    "is",
+    "are",
+    "this",
+    "that",
+    "causing",
+    "presenting",
+    "may",
+    "be",
+  ]);
+
+  const normalize = (text = "") =>
+    text
+      .toLowerCase()
+      .replace(/[^\w\s]/g, "")
+      .split(/\s+/)
+      .filter(
+        (word) =>
+          word &&
+          !stopWords.has(word)
+      );
+
+  const words1 = new Set(normalize(text1));
+  const words2 = new Set(normalize(text2));
 
   if (words1.size === 0 || words2.size === 0) {
     return 0;
@@ -43,7 +77,10 @@ function calculateTextSimilarity(text1, text2) {
     }
   }
 
-  return commonWords / Math.max(words1.size, words2.size);
+  return (
+    commonWords /
+    Math.min(words1.size, words2.size)
+  );
 }
 
 function checkDuplicateComplaint(
@@ -94,7 +131,7 @@ function checkDuplicateComplaint(
         complaint.description
       );
 
-      if (similarity >= 0.6) {
+        if (similarity >= 0.3) {
         return {
           isDuplicate: true,
           duplicateComplaintId: complaint.id,

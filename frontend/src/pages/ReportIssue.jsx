@@ -107,59 +107,146 @@ function ReportIssue() {
   // GENERATE COMPLAINT
   // =========================
 
-  const handleGenerateComplaint = async () => {
-    if (!aiResult) {
-      return;
-    }
+  // =========================
+// GENERATE + SAVE COMPLAINT
+// =========================
 
-    setComplaintLoading(true);
-    setError('');
+const handleGenerateComplaint = async () => {
+  if (!aiResult) {
+    return;
+  }
 
-    try {
-      const response = await fetch(
-        `${API_URL}/api/generate-complaint`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            analysis: aiResult,
-            location: formData.location,
-          }),
-        }
-      );
+  setComplaintLoading(true);
+  setError('');
 
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(
-          result.message ||
-          'Complaint generation failed'
-        );
+  try {
+    // 1. Generate complaint
+    const response = await fetch(
+      `${API_URL}/api/generate-complaint`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          analysis: aiResult,
+          location: formData.location,
+        }),
       }
+    );
 
-      console.log(
-        'Generated Complaint:',
-        result.complaint
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(
+        result.message || 'Complaint generation failed'
       );
-
-      setComplaint(result.complaint);
-
-    } catch (err) {
-      console.error(
-        'Complaint Generation Error:',
-        err
-      );
-
-      setError(
-        err.message ||
-        'Unable to generate complaint.'
-      );
-    } finally {
-      setComplaintLoading(false);
     }
-  };
+
+    console.log(
+      'Generated Complaint:',
+      result.complaint
+    );
+
+    setComplaint(result.complaint);
+
+    // 2. Save complaint to Firestore
+    const saveFormData = new FormData();
+
+saveFormData.append(
+  'issueType',
+  aiResult.issueType
+);
+
+saveFormData.append(
+  'description',
+  formData.description || aiResult.description
+);
+
+saveFormData.append(
+  'severity',
+  aiResult.severity
+);
+
+saveFormData.append(
+  'safetyRisk',
+  aiResult.safetyRisk
+);
+
+saveFormData.append(
+  'confidence',
+  aiResult.confidence
+);
+
+saveFormData.append(
+  'priorityScore',
+  aiResult.priorityScore
+);
+
+saveFormData.append(
+  'priority',
+  aiResult.priority
+);
+
+saveFormData.append(
+  'department',
+  aiResult.department
+);
+
+saveFormData.append(
+  'status',
+  'Pending'
+);
+
+saveFormData.append(
+  'location',
+  formData.location
+);
+
+saveFormData.append(
+  'complaintText',
+  result.complaint
+);
+
+if (image) {
+  saveFormData.append('image', image);
+}
+
+const saveResponse = await fetch(
+  `${API_URL}/api/complaints`,
+  {
+    method: 'POST',
+    body: saveFormData,
+  }
+);
+
+    const saveResult = await saveResponse.json();
+
+    if (!saveResponse.ok || !saveResult.success) {
+      throw new Error(
+        saveResult.message || 'Failed to save complaint'
+      );
+    }
+
+    console.log(
+      '✅ Complaint saved to Firestore:',
+      saveResult.data
+    );
+
+  } catch (err) {
+    console.error(
+      'Complaint Generation / Firestore Error:',
+      err
+    );
+
+    setError(
+      err.message ||
+        'Unable to generate or save complaint.'
+    );
+  } finally {
+    setComplaintLoading(false);
+  }
+};
     // =========================
   // DUPLICATE COMPLAINT CHECK
   // =========================
@@ -182,26 +269,25 @@ function ReportIssue() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            newComplaint: {
-              issueType: aiResult.issueType,
-              description: formData.description,
-            },
+  newComplaint: {
+    issueType: aiResult.issueType,
+    description:
+      formData.description || aiResult.description,
+    latitude: formData.latitude,
+    longitude: formData.longitude,
+  },
 
-            // Demo existing complaints
-            existingComplaints: [
-              {
-                id: 'CP001',
-                issueType: 'pothole',
-                description:
-                  'Large pothole on the road causing danger to vehicles',
-              },
-              {
-                id: 'CP002',
-                issueType: 'garbage',
-                description:
-                  'Garbage and waste dumped near the roadside',
-              },
-            ],
+
+            // Check against real complaints stored in Firestore
+            body: JSON.stringify({
+  newComplaint: {
+    issueType: aiResult.issueType,
+    description:
+      formData.description || aiResult.description,
+    latitude: formData.latitude,
+    longitude: formData.longitude,
+  },
+}),
           }),
         }
       );
@@ -316,13 +402,14 @@ function ReportIssue() {
         <div className="file-upload-box">
 
           <input
-            type="file"
-            id="image"
-            name="image"
-            accept="image/*"
-            onChange={handleImageChange}
-            required
-          />
+  type="file"
+  id="image"
+  name="image"
+  accept="image/*"
+  capture="environment"
+  onChange={handleImageChange}
+  required
+/>
 
           <label
             htmlFor="image"

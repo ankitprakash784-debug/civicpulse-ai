@@ -1,18 +1,17 @@
 const { GoogleGenAI } = require("@google/genai");
 
 const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY
+  apiKey: process.env.GEMINI_API_KEY,
 });
 
-async function analyzeCivicImage(imageBase64, mimeType) {
-  const prompt = `
+const prompt = `
 You are CivicPulse AI, a civic infrastructure inspection assistant.
 
 Analyze the provided image and identify whether it contains one of these civic issues:
 
 - pothole
 - garbage
-- broken streetlight
+- broken_streetlight
 - water_leak
 - other
 
@@ -46,34 +45,107 @@ other → General Civic Department
 Do not include markdown or explanations outside the JSON.
 `;
 
-  const response = await ai.models.generateContent({
-    model: "gemini-3.6-flash",
-    contents: [
-      {
-        role: "user",
-        parts: [
-          { text: prompt },
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function generateWithRetry(
+  model,
+  imageBase64,
+  mimeType,
+  maxAttempts = 2
+) {
+  let lastError;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      console.log(
+        `🤖 Gemini ${model} attempt ${attempt}/${maxAttempts}`
+      );
+
+      const response = await ai.models.generateContent({
+        model,
+        contents: [
           {
-            inlineData: {
-              mimeType,
-              data: imageBase64
-            }
-          }
-        ]
+            role: "user",
+            parts: [
+              { text: prompt },
+              {
+                inlineData: {
+                  mimeType,
+                  data: imageBase64,
+                },
+              },
+            ],
+          },
+        ],
+      });
+
+      return response;
+    } catch (error) {
+      lastError = error;
+
+      console.error(
+        `Gemini ${model} attempt ${attempt} failed:`,
+        error.message
+      );
+
+      if (attempt < maxAttempts) {
+        const delay = attempt * 2000;
+
+        console.log(
+          `⏳ Retrying in ${delay / 1000}s...`
+        );
+
+        await sleep(delay);
       }
-    ]
-  });
+    }
+  }
 
-  const text = response.text;
+  throw lastError;
+}
 
-  const cleanedText = text
-    .replace(/```json/g, "")
-    .replace(/```/g, "")
-    .trim();
+async function analyzeCivicImage(
+  imageBase64,
+  mimeType
+) {
+  const models = [
+  "gemini-3.6-flash",
+  "gemini-3.5-flash",
+  "gemini-3.5-flash-lite",
+];
 
-  return JSON.parse(cleanedText);
+  let lastError;
+
+  for (const model of models) {
+    try {
+      const response = await generateWithRetry(
+        model,
+        imageBase64,
+        mimeType,
+        2
+      );
+
+      const text = response.text;
+
+      const cleanedText = text
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
+        .trim();
+
+      return JSON.parse(cleanedText);
+    } catch (error) {
+      lastError = error;
+
+      console.error(
+        `❌ Model ${model} failed. Trying fallback model...`
+      );
+    }
+  }
+
+  throw lastError;
 }
 
 module.exports = {
-  analyzeCivicImage
+  analyzeCivicImage,
 };

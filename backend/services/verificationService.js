@@ -4,6 +4,45 @@ const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY
 });
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function generateVerification(
+  model,
+  prompt,
+  beforeImageBase64,
+  beforeMimeType,
+  afterImageBase64,
+  afterMimeType
+) {
+  return await ai.models.generateContent({
+    model,
+    contents: [
+      {
+        role: "user",
+        parts: [
+          {
+            text: prompt
+          },
+          {
+            inlineData: {
+              mimeType: beforeMimeType,
+              data: beforeImageBase64
+            }
+          },
+          {
+            inlineData: {
+              mimeType: afterMimeType,
+              data: afterImageBase64
+            }
+          }
+        ]
+      }
+    ]
+  });
+}
+
 async function analyzeResolutionImages(
   beforeImageBase64,
   beforeMimeType,
@@ -56,40 +95,52 @@ Rules:
 - Do not include markdown or explanations outside JSON.
 `;
 
-  const response = await ai.models.generateContent({
-    model: "gemini-3.6-flash",
-    contents: [
-      {
-        role: "user",
-        parts: [
-          {
-            text: prompt
-          },
-          {
-            inlineData: {
-              mimeType: beforeMimeType,
-              data: beforeImageBase64
-            }
-          },
-          {
-            inlineData: {
-              mimeType: afterMimeType,
-              data: afterImageBase64
-            }
-          }
-        ]
-      }
-    ]
-  });
+  const models = [
+    "gemini-3.5-flash-lite",
+    "gemini-3.1-flash-lite"
+  ];
 
-  const text = response.text;
+  let lastError;
 
-  const cleanedText = text
-    .replace(/```json/g, "")
-    .replace(/```/g, "")
-    .trim();
+  for (const model of models) {
+    try {
+      console.log(`🤖 Resolution verification using ${model}`);
 
-  return JSON.parse(cleanedText);
+      const response = await generateVerification(
+        model,
+        prompt,
+        beforeImageBase64,
+        beforeMimeType,
+        afterImageBase64,
+        afterMimeType
+      );
+
+      const text = response.text;
+
+      const cleanedText = text
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
+        .trim();
+
+      const result = JSON.parse(cleanedText);
+
+      console.log(`✅ Resolution verification succeeded with ${model}`);
+
+      return result;
+    } catch (error) {
+      lastError = error;
+
+      console.error(
+        `❌ Resolution verification failed with ${model}:`,
+        error.message
+      );
+
+      // Small delay before trying fallback model
+      await sleep(1500);
+    }
+  }
+
+  throw lastError;
 }
 
 module.exports = {
