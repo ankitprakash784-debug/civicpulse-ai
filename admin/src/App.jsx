@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Reports from "./pages/Reports";
 import Analytics from "./pages/Analytics";
 import Login from "./pages/Login";
@@ -10,6 +10,20 @@ function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [page, setPage] = useState("dashboard");
+  const [reports, setReports] = useState([]);
+  useEffect(() => {
+  fetch("http://localhost:5050/api/complaints")
+    .then((res) => res.json())
+    .then((result) => {
+      setReports(result.data || []);
+      setLoadingReports(false);
+    })
+    .catch((error) => {
+      console.error("Failed to fetch reports:", error);
+      setLoadingReports(false);
+    });
+}, []);
+  const [loadingReports, setLoadingReports] = useState(true);
   const [showProfile, setShowProfile] = useState(false);
   const [editProfile, setEditProfile] = useState(false);
   const [adminName, setAdminName] = useState("Admin");
@@ -323,22 +337,34 @@ if (notification.id === 2) {
 
                   <div className="stat-card">
                     <span>Total Issues</span>
-                    <strong>247</strong>
+                    <strong>{reports.length}</strong>
                   </div>
 
                   <div className="stat-card critical">
                     <span>Critical</span>
-                    <strong>31</strong>
+                   <strong>
+                     {reports.filter(
+                       (report) => report.priorityLevel === "CRITICAL"
+                   ).length}
+                 </strong>
                   </div>
 
                   <div className="stat-card pending">
                     <span>Pending</span>
-                    <strong>76</strong>
+                    <strong>
+  {reports.filter(
+    (report) => report.status === "Pending"
+  ).length}
+</strong>
                   </div>
 
                   <div className="stat-card resolved">
                     <span>Resolved</span>
-                    <strong>140</strong>
+                    <strong>
+  {reports.filter(
+    (report) => report.status === "Resolved"
+  ).length}
+</strong>
                   </div>
 
                 </section>

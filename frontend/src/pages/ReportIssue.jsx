@@ -39,10 +39,12 @@ function ReportIssue() {
     (position) => {
       const { latitude, longitude } = position.coords;
 
-      setFormData((prev) => ({
-        ...prev,
-        location: `${latitude}, ${longitude}`,
-      }));
+     setFormData((prev) => ({
+  ...prev,
+  location: `${latitude}, ${longitude}`,
+  latitude: latitude,
+  longitude: longitude,
+}));
     },
     () => {
       alert('Location access allow karo, phir dobara 📍 button dabao.');
