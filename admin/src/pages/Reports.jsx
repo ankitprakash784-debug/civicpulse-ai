@@ -1,4 +1,50 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMap,
+} from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+function MapCenterUpdater({ center }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (center) {
+      map.setView(center, 12);
+    }
+  }, [center, map]);
+
+  return null;
+}
+
+const complaintMarker = L.divIcon({
+  className: "",
+  html: `
+    <div style="
+      width: 34px;
+      height: 34px;
+      border-radius: 50% 50% 50% 0;
+      background: #0f172a;
+      border: 3px solid #60a5fa;
+      transform: rotate(-45deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+    ">
+      <span style="
+        transform: rotate(45deg);
+        font-size: 16px;
+      ">📍</span>
+    </div>
+  `,
+  iconSize: [34, 34],
+  iconAnchor: [17, 34],
+  popupAnchor: [0, -34],
+});
 
 function Reports() {
   const [selectedReport, setSelectedReport] = useState(null);
@@ -44,42 +90,125 @@ function Reports() {
     );
   };
   const [beforePhoto, setBeforePhoto] = useState(null);
-  const [afterPhoto, setAfterPhoto] = useState(null); 
+const [afterPhoto, setAfterPhoto] = useState(null);
+
+const [beforePhotoPreview, setBeforePhotoPreview] = useState(null);
+const [afterPhotoPreview, setAfterPhotoPreview] = useState(null);
+
+const [verificationResult, setVerificationResult] = useState(null);
   const [aiVerified, setAiVerified] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
   const [updatedStatus, setUpdatedStatus] = useState("");
   const [showStatusDropdown, setShowStatusDropdown] = useState(false);
-  const [reports, setReports] = useState([
-    {
-      id: 1,
-      issue: "🕳️ Pothole",
-      location: "Main Road",
-      priority: 92,
-      status: "Pending",
-    },
-    {
-      id: 2,
-      issue: "🗑️ Garbage",
-      location: "Sector 15",
-      priority: 67,
-      status: "In Progress",
-    },
-    {
-      id: 3,
-      issue: "💡 Streetlight",
-      location: "Market Road",
-      priority: 54,
-      status: "Resolved",
-    },
-    {
-      id: 4,
-      issue: "🚰 Water Leakage",
-      location: "Sector 12",
-      priority: 81,
-      status: "Pending",
-    },
-  ]);
+  const [reports, setReports] = useState([]);
+  const [loadingReports, setLoadingReports] = useState(true);
+  const [reportsError, setReportsError] = useState("");
+  const getPriorityLevel = (score) => {
+  const numericScore = Number(score) || 0;
 
+  if (numericScore >= 400) return "CRITICAL";
+  if (numericScore >= 250) return "HIGH";
+  if (numericScore >= 100) return "MEDIUM";
+  return "LOW";
+};
+
+const issueBreakdown = reports.reduce((acc, report) => {
+  const issue = report.issue || "Other";
+
+  acc[issue] = (acc[issue] || 0) + 1;
+
+  return acc;
+}, {});
+
+const departmentBreakdown = reports.reduce((acc, report) => {
+  const department =
+    report.department || "General Civic Department";
+
+  acc[department] = (acc[department] || 0) + 1;
+
+  return acc;
+}, {});
+
+useEffect(() => {
+  const fetchReports = async () => {
+    try {
+      setLoadingReports(true);
+      setReportsError("");
+
+      const response = await fetch(
+        "http://localhost:5050/api/complaints"
+      );
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.message || "Failed to fetch complaints"
+        );
+      }
+
+      const formattedReports = result.data.map((complaint) => ({
+        id: complaint.id,
+        photoUrl: complaint.photoUrl || null,
+        issue: getIssueLabel(complaint.issueType),
+        location: complaint.location || "Location not provided",
+        priority: complaint.priorityScore || 0,
+        priorityLevel: getPriorityLevel(complaint.priorityScore),
+        status: complaint.status || "Pending",
+        department: complaint.department,
+        description: complaint.description,
+        severity: complaint.severity,
+        safetyRisk: complaint.safetyRisk,
+        confidence: complaint.confidence,
+        complaintText: complaint.complaintText,
+        createdAt: complaint.createdAt,
+
+        latitude: Number(complaint.latitude),
+        longitude: Number(complaint.longitude),
+      }));
+
+      setReports(formattedReports);
+    } catch (error) {
+      console.error("Reports fetch error:", error);
+      setReportsError(error.message);
+    } finally {
+      setLoadingReports(false);
+    }
+  };
+
+  fetchReports();
+}, []);
+const totalReports = reports.length;
+
+const pendingReports = reports.filter(
+  (report) => report.status === "Pending"
+).length;
+
+const inProgressReports = reports.filter(
+  (report) => report.status === "In Progress"
+).length;
+
+const resolvedReports = reports.filter(
+  (report) => report.status === "Resolved"
+).length;
+
+const highPriorityReports = reports.filter(
+  (report) =>
+    report.priorityLevel === "HIGH" ||
+    report.priorityLevel === "CRITICAL"
+).length;
+const getIssueLabel = (issueType) => {
+  const issueMap = {
+    pothole: "🕳️ Pothole",
+    garbage: "🗑️ Garbage",
+    broken_streetlight: "💡 Streetlight",
+    water_leak: "🚰 Water Leakage",
+    water_leakage: "🚰 Water Leakage",
+    other: "🏙️ Other",
+  };
+
+  return issueMap[issueType] || "🏙️ Other";
+};
   return (
     <div className="reports-page">
 
@@ -92,6 +221,267 @@ function Reports() {
           </p>
         </div>
       </div>
+      {/* DASHBOARD STATS */}
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(4, 1fr)",
+    gap: "16px",
+    marginBottom: "24px",
+  }}
+>
+  <div
+    style={{
+      background: "#fff",
+      borderRadius: "14px",
+      padding: "20px",
+      border: "1px solid #e5e7eb",
+      boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+    }}
+  >
+    <div style={{ fontSize: "28px" }}>📋</div>
+    <div
+      style={{
+        fontSize: "14px",
+        color: "#6b7280",
+        marginTop: "8px",
+      }}
+    >
+      Total Reports
+    </div>
+    <strong
+      style={{
+        display: "block",
+        fontSize: "30px",
+        marginTop: "4px",
+      }}
+    >
+      {totalReports}
+    </strong>
+  </div>
+
+  <div
+    style={{
+      background: "#fff",
+      borderRadius: "14px",
+      padding: "20px",
+      border: "1px solid #e5e7eb",
+      boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+    }}
+  >
+    <div style={{ fontSize: "28px" }}>🟡</div>
+    <div
+      style={{
+        fontSize: "14px",
+        color: "#6b7280",
+        marginTop: "8px",
+      }}
+    >
+      Pending
+    </div>
+    <strong
+      style={{
+        display: "block",
+        fontSize: "30px",
+        marginTop: "4px",
+      }}
+    >
+      {pendingReports}
+    </strong>
+  </div>
+
+  <div
+    style={{
+      background: "#fff",
+      borderRadius: "14px",
+      padding: "20px",
+      border: "1px solid #e5e7eb",
+      boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+    }}
+  >
+    <div style={{ fontSize: "28px" }}>🔴</div>
+    <div
+      style={{
+        fontSize: "14px",
+        color: "#6b7280",
+        marginTop: "8px",
+      }}
+    >
+      High Priority
+    </div>
+    <strong
+      style={{
+        display: "block",
+        fontSize: "30px",
+        marginTop: "4px",
+      }}
+    >
+      {highPriorityReports}
+    </strong>
+  </div>
+
+  <div
+    style={{
+      background: "#fff",
+      borderRadius: "14px",
+      padding: "20px",
+      border: "1px solid #e5e7eb",
+      boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+    }}
+  >
+    <div style={{ fontSize: "28px" }}>🟢</div>
+    <div
+      style={{
+        fontSize: "14px",
+        color: "#6b7280",
+        marginTop: "8px",
+      }}
+    >
+      Resolved
+    </div>
+    <strong
+      style={{
+        display: "block",
+        fontSize: "30px",
+        marginTop: "4px",
+      }}
+    >
+      {resolvedReports}
+    </strong>
+  </div>
+</div>
+{/* PRIORITY BREAKDOWN */}
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(4, 1fr)",
+    gap: "16px",
+    marginBottom: "24px",
+  }}
+>
+  {["CRITICAL", "HIGH", "MEDIUM", "LOW"].map((level) => {
+    const count = reports.filter(
+      (report) => report.priorityLevel === level
+    ).length;
+
+    return (
+      <div
+        key={level}
+        style={{
+          background: "#ffffff",
+          border: "1px solid #e5e7eb",
+          borderRadius: "12px",
+          padding: "16px",
+          textAlign: "center",
+        }}
+      >
+        <div
+          style={{
+            fontSize: "13px",
+            fontWeight: "600",
+            color: "#6b7280",
+            marginBottom: "8px",
+          }}
+        >
+          {level} PRIORITY
+        </div>
+
+        <div
+          style={{
+            fontSize: "28px",
+            fontWeight: "700",
+          }}
+        >
+          {count}
+        </div>
+      </div>
+    );
+  })}
+</div>
+{/* ISSUE & DEPARTMENT BREAKDOWN */}
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "20px",
+    marginBottom: "24px",
+  }}
+>
+  {/* ISSUE BREAKDOWN */}
+  <div
+    style={{
+      background: "#ffffff",
+      border: "1px solid #e5e7eb",
+      borderRadius: "16px",
+      padding: "22px",
+    }}
+  >
+    <h3 style={{ marginTop: 0, marginBottom: "18px" }}>
+      📊 Issue Breakdown
+    </h3>
+
+    {Object.entries(issueBreakdown).map(([issue, count]) => (
+      <div
+        key={issue}
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          padding: "12px 0",
+          borderBottom: "1px solid #f1f5f9",
+        }}
+      >
+        <span style={{ fontWeight: "600" }}>
+          {issue}
+        </span>
+
+        <span style={{ fontWeight: "700", fontSize: "18px" }}>
+          {count}
+        </span>
+      </div>
+    ))}
+  </div>
+
+  {/* DEPARTMENT BREAKDOWN */}
+  <div
+    style={{
+      background: "#ffffff",
+      border: "1px solid #e5e7eb",
+      borderRadius: "16px",
+      padding: "22px",
+    }}
+  >
+    <h3 style={{ marginTop: 0, marginBottom: "18px" }}>
+      🏢 Department Breakdown
+    </h3>
+
+    {Object.entries(departmentBreakdown).map(
+      ([department, count]) => (
+        <div
+          key={department}
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: "12px 0",
+            borderBottom: "1px solid #f1f5f9",
+          }}
+        >
+          <span style={{ fontWeight: "600" }}>
+            {department}
+          </span>
+
+          <span
+            style={{
+              fontWeight: "700",
+              fontSize: "18px",
+            }}
+          >
+            {count}
+          </span>
+        </div>
+      )
+    )}
+  </div>
+</div>
       {/* SEARCH & FILTER */}
       <div className="report-filters">
 
@@ -184,8 +574,203 @@ function Reports() {
 </div>
 
       </div>
+{/* CIVIC COMPLAINT MAP */}
+{(() => {
+  const mappedReports = reports.filter(
+    (report) =>
+      Number.isFinite(report.latitude) &&
+      Number.isFinite(report.longitude)
+  );
+
+  const mapCenter =
+    mappedReports.length > 0
+      ? [
+          mappedReports.reduce(
+            (sum, report) => sum + report.latitude,
+            0
+          ) / mappedReports.length,
+          mappedReports.reduce(
+            (sum, report) => sum + report.longitude,
+            0
+          ) / mappedReports.length,
+        ]
+      : [28.6139, 77.209];
+
+  return (
+    <div
+      style={{
+        marginBottom: "24px",
+        background: "#ffffff",
+        borderRadius: "16px",
+        padding: "20px",
+        boxShadow: "0 8px 25px rgba(15, 23, 42, 0.08)",
+        border: "1px solid #e5e7eb",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "14px",
+          gap: "10px",
+          flexWrap: "wrap",
+        }}
+      >
+        <div>
+          <h3
+            style={{
+              margin: 0,
+              color: "#0f172a",
+              fontSize: "20px",
+            }}
+          >
+            🗺️ Civic Issue Map
+          </h3>
+
+          <p
+            style={{
+              margin: "5px 0 0",
+              color: "#64748b",
+              fontSize: "13px",
+            }}
+          >
+            Live complaint locations from citizen GPS data
+          </p>
+        </div>
+
+        <span
+          style={{
+            background: "#eff6ff",
+            color: "#2563eb",
+            padding: "7px 12px",
+            borderRadius: "20px",
+            fontSize: "13px",
+            fontWeight: "600",
+          }}
+        >
+          📍 {mappedReports.length} mapped reports
+        </span>
+      </div>
+
+      <MapContainer
+        center={mapCenter}
+        zoom={12}
+        scrollWheelZoom={true}
+        style={{
+          height: "420px",
+          width: "100%",
+          borderRadius: "12px",
+          overflow: "hidden",
+        }}
+      >
+        <MapCenterUpdater center={mapCenter} />
+
+        <TileLayer
+          attribution='&copy; OpenStreetMap contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+
+        {mappedReports.map((report) => (
+          <Marker
+            key={report.id}
+            position={[report.latitude, report.longitude]}
+            icon={complaintMarker}
+          >
+            <Popup>
+              <div style={{ minWidth: "190px" }}>
+                <strong style={{ fontSize: "15px" }}>
+                  {report.issue}
+                </strong>
+
+                <p style={{ margin: "8px 0 4px" }}>
+                  📍 {report.location}
+                </p>
+
+                <p style={{ margin: "4px 0" }}>
+                  📊 Priority:{" "}
+                  <strong>{report.priorityLevel}</strong>
+                </p>
+
+                <p style={{ margin: "4px 0" }}>
+                  📌 Status:{" "}
+                  <strong>{report.status}</strong>
+                </p>
+
+                <p
+                  style={{
+                    margin: "4px 0",
+                    fontSize: "11px",
+                    color: "#64748b",
+                  }}
+                >
+                  GPS: {report.latitude.toFixed(5)},{" "}
+                  {report.longitude.toFixed(5)}
+                </p>
+
+                <button
+  type="button"
+  onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setSelectedReport(report);
+    setUpdatedStatus(report.status);
+
+    setTimeout(() => {
+      document.querySelector(".details-panel")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 100);
+  }}
+                  style={{
+                    marginTop: "8px",
+                    width: "100%",
+                    padding: "8px",
+                    border: "none",
+                    borderRadius: "7px",
+                    background: "#0f172a",
+                    color: "#ffffff",
+                    cursor: "pointer",
+                    fontWeight: "600",
+                  }}
+                >
+                  View Details
+                </button>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+      </MapContainer>
+
+      {mappedReports.length === 0 && (
+        <p
+          style={{
+            margin: "10px 0 0",
+            color: "#64748b",
+            fontSize: "13px",
+          }}
+        >
+          No complaints with GPS coordinates yet.
+        </p>
+      )}
+    </div>
+  );
+})()}
 
       <div className="all-reports">
+{loadingReports && (
+  <p style={{ padding: "20px" }}>
+    Loading reports...
+  </p>
+)}
+
+{reportsError && (
+  <p style={{ padding: "20px" }}>
+    ❌ {reportsError}
+  </p>
+)}
 
         <div className="report-header">
           <span>Issue</span>
@@ -226,18 +811,10 @@ function Reports() {
 
             <span
   className={`priority-badge ${
-    report.priority >= 80
-      ? "high"
-      : report.priority >= 50
-      ? "medium"
-      : "low"
+    report.priorityLevel?.toLowerCase() || "low"
   }`}
 >
-  {report.priority >= 80
-    ? "High"
-    : report.priority >= 50
-    ? "Medium"
-    : "Low"}
+  {report.priorityLevel || "Low"}
 </span>
 
             <span className="status">
@@ -278,7 +855,25 @@ function Reports() {
     <div className="details-content">
 
       <h3>{selectedReport.issue}</h3>
+{selectedReport.photoUrl && (
+  <div style={{ marginTop: "20px", marginBottom: "20px" }}>
+    <h3>📸 Citizen Report Photo</h3>
 
+    <img
+      src={`http://localhost:5050${selectedReport.photoUrl}`}
+      alt="Citizen reported issue"
+      style={{
+        width: "100%",
+        maxWidth: "500px",
+        maxHeight: "350px",
+        objectFit: "cover",
+        borderRadius: "12px",
+        border: "1px solid #ddd",
+        display: "block",
+      }}
+    />
+  </div>
+)}
       <div className="issue-summary-cards">
 
   <div className="issue-summary-card">
@@ -339,19 +934,52 @@ function Reports() {
 </div>
 <button
   className="save-status-button"
-  onClick={() => {
-    setReports(
-      reports.map((report) =>
-        report.id === selectedReport.id
-          ? { ...report, status: updatedStatus }
-          : report
-      )
-    );
+  onClick={async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5050/api/complaints/${selectedReport.id}/status`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            status: updatedStatus,
+          }),
+        }
+      );
 
-    setSelectedReport({
-      ...selectedReport,
-      status: updatedStatus,
-    });
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.message || "Failed to update status"
+        );
+      }
+
+      // Update report list in UI
+      setReports((prevReports) =>
+        prevReports.map((report) =>
+          report.id === selectedReport.id
+            ? {
+                ...report,
+                status: updatedStatus,
+              }
+            : report
+        )
+      );
+
+      // Update selected report
+      setSelectedReport((prevReport) => ({
+        ...prevReport,
+        status: updatedStatus,
+      }));
+
+      alert("✅ Status updated successfully!");
+    } catch (error) {
+      console.error("Status update error:", error);
+      alert(`❌ Failed to update status: ${error.message}`);
+    }
   }}
 >
   ✓ Save Status
@@ -364,9 +992,9 @@ function Reports() {
   <div className="verification-photos">
 
     <div className="photo-box">
-  {beforePhoto ? (
+  {beforePhotoPreview ? (
     <img
-      src={beforePhoto}
+      src={beforePhotoPreview}
       alt="Before issue"
       className="verification-image"
     />
@@ -385,20 +1013,23 @@ function Reports() {
       type="file"
       accept="image/*"
       onChange={(e) => {
-        const file = e.target.files[0];
+  const file = e.target.files[0];
 
-        if (file) {
-          setBeforePhoto(URL.createObjectURL(file));
-        }
-      }}
+  if (file) {
+    setBeforePhoto(file);
+    setBeforePhotoPreview(URL.createObjectURL(file));
+    setAiVerified(false);
+    setVerificationResult(null);
+  }
+}}
     />
   </label>
 </div>
 
     <div className="photo-box">
-  {afterPhoto ? (
+  {afterPhotoPreview ? (
     <img
-      src={afterPhoto}
+      src={afterPhotoPreview}
       alt="After issue"
       className="verification-image"
     />
@@ -417,12 +1048,15 @@ function Reports() {
       type="file"
       accept="image/*"
       onChange={(e) => {
-        const file = e.target.files[0];
+  const file = e.target.files[0];
 
-        if (file) {
-          setAfterPhoto(URL.createObjectURL(file));
-        }
-      }}
+  if (file) {
+    setAfterPhoto(file);
+    setAfterPhotoPreview(URL.createObjectURL(file));
+    setAiVerified(false);
+    setVerificationResult(null);
+  }
+}}
     />
   </label>
 </div>
@@ -432,28 +1066,134 @@ function Reports() {
  <div className="verification-result">
   <span>Verification Status</span>
 
-  {aiVerified ? (
-    <div className="ai-success-result">
-      <strong>✅ Verified</strong>
-      <p>Issue appears to be successfully resolved.</p>
-      <small>AI Confidence: 94%</small>
-    </div>
-  ) : (
-    <strong>⏳ Waiting for AI Verification</strong>
-  )}
+  {verificationResult ? (
+  <div className="ai-success-result">
+    <strong>
+      {verificationResult.resolved &&
+      verificationResult.sameIssue
+        ? "✅ Verified"
+        : "❌ Not Resolved"}
+    </strong>
+
+    <p>{verificationResult.reason}</p>
+
+    <small>
+      AI Confidence:{" "}
+      {Math.round(
+        verificationResult.confidence * 100
+      )}
+      %
+    </small>
+
+    <small>
+      Before Severity:{" "}
+      {verificationResult.beforeSeverity}/5
+    </small>
+
+    <small>
+      After Severity:{" "}
+      {verificationResult.afterSeverity}/5
+    </small>
+  </div>
+) : (
+  <strong>⏳ Waiting for AI Verification</strong>
+)}
 </div>
  <button
-  className={`verify-button ${aiVerified ? "verification-complete" : ""}`}
-  onClick={() => {
-    setAiLoading(true);
-    setAiVerified(false);
+  className={`verify-button ${
+    aiVerified ? "verification-complete" : ""
+  }`}
+  onClick={async () => {
+    try {
+      setAiLoading(true);
+      setAiVerified(false);
+      setVerificationResult(null);
 
-    setTimeout(() => {
+      const formData = new FormData();
+
+      formData.append("beforeImage", beforePhoto);
+      formData.append("afterImage", afterPhoto);
+
+      const response = await fetch(
+        "http://localhost:5050/api/verify-resolution",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.message || "AI verification failed"
+        );
+      }
+
+      console.log("AI Verification Result:", result);
+
+      setVerificationResult(result.data);
+
+      if (
+        result.data.resolved &&
+        result.data.sameIssue &&
+        selectedReport?.id
+      ) {
+        const statusResponse = await fetch(
+          `http://localhost:5050/api/complaints/${selectedReport.id}/status`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              status: "Resolved",
+            }),
+          }
+        );
+
+        const statusResult = await statusResponse.json();
+
+        if (!statusResponse.ok || !statusResult.success) {
+          throw new Error(
+            statusResult.message ||
+              "Failed to update complaint status"
+          );
+        }
+
+        setReports((prevReports) =>
+          prevReports.map((report) =>
+            report.id === selectedReport.id
+              ? {
+                  ...report,
+                  status: "Resolved",
+                }
+              : report
+          )
+        );
+
+        setSelectedReport((prevReport) => ({
+          ...prevReport,
+          status: "Resolved",
+        }));
+
+        setUpdatedStatus("Resolved");
+        setAiVerified(true);
+      }
+    } catch (error) {
+      console.error("AI verification error:", error);
+
+      alert(`❌ Verification failed: ${error.message}`);
+    } finally {
       setAiLoading(false);
-      setAiVerified(true);
-    }, 2000);
+    }
   }}
-  disabled={!beforePhoto || !afterPhoto || aiLoading || aiVerified}
+  disabled={
+    !beforePhoto ||
+    !afterPhoto ||
+    aiLoading ||
+    aiVerified
+  }
 >
   {aiLoading
     ? "⏳ AI is analyzing..."
@@ -468,77 +1208,180 @@ function Reports() {
   <h3>Issue Timeline</h3>
   <div className="current-status">
   <span>Current Status</span>
-  <strong>🟠 Work In Progress</strong>
+
+  <strong>
+    {selectedReport.status === "Resolved"
+      ? "🟢 Resolved"
+      : selectedReport.status === "In Progress"
+      ? "🟠 Work In Progress"
+      : "🟡 Pending"}
+  </strong>
 </div>
 
   <div className="timeline">
 
-    <div className="timeline-item completed">
-      <div className="timeline-dot">✓</div>
+  <div className="timeline-item completed">
+    <div className="timeline-dot">✓</div>
 
-      <div className="timeline-content">
-        <strong>Report Submitted</strong>
-        <span>Citizen reported the issue</span>
-        <small>10:42 AM</small>
-      </div>
+    <div className="timeline-content">
+      <strong>Report Submitted</strong>
+      <span>Citizen reported the issue</span>
+      <small>
+        {selectedReport.createdAt
+          ? new Date(selectedReport.createdAt).toLocaleString()
+          : "Submitted"}
+      </small>
     </div>
-
-
-    <div className="timeline-item completed">
-      <div className="timeline-dot">✓</div>
-
-      <div className="timeline-content">
-        <strong>AI Analysis Completed</strong>
-        <span>Issue detected and priority calculated</span>
-        <small>10:43 AM</small>
-      </div>
-    </div>
-
-
-    <div className="timeline-item completed">
-      <div className="timeline-dot">✓</div>
-
-      <div className="timeline-content">
-        <strong>Assigned to Department</strong>
-        <span>Road Department assigned</span>
-        <small>10:45 AM</small>
-      </div>
-    </div>
-
-
-    <div className="timeline-item active">
-      <div className="timeline-dot">●</div>
-
-      <div className="timeline-content">
-        <strong>Work In Progress</strong>
-        <span>Department is working on the issue</span>
-        <small>12:20 PM</small>
-      </div>
-    </div>
-
-
-    <div className="timeline-item">
-      <div className="timeline-dot">○</div>
-
-      <div className="timeline-content">
-        <strong>Resolution Submitted</strong>
-        <span>Waiting for repair completion</span>
-        <small>Pending</small>
-      </div>
-    </div>
-
-
-    <div className="timeline-item">
-      <div className="timeline-dot">○</div>
-
-      <div className="timeline-content">
-        <strong>AI Verification</strong>
-        <span>Before/after photos will be verified</span>
-        <small>Pending</small>
-      </div>
-    </div>
-
   </div>
+
+
+  <div className="timeline-item completed">
+    <div className="timeline-dot">✓</div>
+
+    <div className="timeline-content">
+      <strong>AI Analysis Completed</strong>
+      <span>
+        {selectedReport.issue
+          ? `${selectedReport.issue} detected and priority calculated`
+          : "Issue detected and priority calculated"}
+      </span>
+      <small>Completed</small>
+    </div>
+  </div>
+
+
+  <div className="timeline-item completed">
+    <div className="timeline-dot">✓</div>
+
+    <div className="timeline-content">
+      <strong>Assigned to Department</strong>
+      <span>
+        {selectedReport.department || "Civic Department"} assigned
+      </span>
+      <small>Completed</small>
+    </div>
+  </div>
+
+
+  <div
+    className={`timeline-item ${
+      selectedReport.status === "In Progress" ||
+      selectedReport.status === "Resolved"
+        ? "completed"
+        : "active"
+    }`}
+  >
+    <div className="timeline-dot">
+      {selectedReport.status === "Resolved" ? "✓" : "●"}
+    </div>
+
+    <div className="timeline-content">
+      <strong>Work In Progress</strong>
+
+      <span>
+        {selectedReport.status === "Pending"
+          ? "Awaiting department action"
+          : selectedReport.status === "In Progress"
+          ? "Department is working on the issue"
+          : "Department work completed"}
+      </span>
+
+      <small>
+        {selectedReport.status === "Pending"
+          ? "Pending"
+          : "Completed"}
+      </small>
+    </div>
+  </div>
+
+
+  <div
+    className={`timeline-item ${
+      selectedReport.status === "Resolved"
+        ? "completed"
+        : ""
+    }`}
+  >
+    <div className="timeline-dot">
+      {selectedReport.status === "Resolved" ? "✓" : "○"}
+    </div>
+
+    <div className="timeline-content">
+      <strong>Resolution Submitted</strong>
+
+      <span>
+        {selectedReport.status === "Resolved"
+          ? "Repair completion submitted"
+          : "Waiting for repair completion"}
+      </span>
+
+      <small>
+        {selectedReport.status === "Resolved"
+          ? "Completed"
+          : "Pending"}
+      </small>
+    </div>
+  </div>
+
+
+  <div
+    className={`timeline-item ${
+      selectedReport.status === "Resolved"
+        ? "completed"
+        : ""
+    }`}
+  >
+    <div className="timeline-dot">
+      {selectedReport.status === "Resolved" ? "✓" : "○"}
+    </div>
+
+    <div className="timeline-content">
+      <strong>AI Verification</strong>
+
+      <span>
+        {selectedReport.status === "Resolved"
+          ? "Before/after photos verified by AI"
+          : "Before/after photos will be verified"}
+      </span>
+
+      <small>
+        {selectedReport.status === "Resolved"
+          ? "Verified"
+          : "Pending"}
+      </small>
+    </div>
+  </div>
+
+
+  <div
+    className={`timeline-item ${
+      selectedReport.status === "Resolved"
+        ? "completed"
+        : ""
+    }`}
+  >
+    <div className="timeline-dot">
+      {selectedReport.status === "Resolved" ? "✓" : "○"}
+    </div>
+
+    <div className="timeline-content">
+      <strong>Complaint Resolved</strong>
+
+      <span>
+        {selectedReport.status === "Resolved"
+          ? "Issue successfully verified and resolved"
+          : "Issue not yet resolved"}
+      </span>
+
+      <small>
+        {selectedReport.status === "Resolved"
+          ? "Completed"
+          : "Pending"}
+      </small>
+    </div>
+  </div>
+
+</div>
 
 </div>
 
