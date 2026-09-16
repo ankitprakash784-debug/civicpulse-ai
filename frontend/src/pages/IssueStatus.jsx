@@ -122,53 +122,100 @@ function IssueStatus() {
       )}
 
       {result && (
-        <div className="complaint-card">
-          <h2>
-            {getIssueName(result.issueType)}
-          </h2>
+  <div className="complaint-card">
 
-          <p>
-            {result.description}
-          </p>
+    <h2>
+      {getIssueName(result.issueType)}
+    </h2>
 
-          <p>
-            <strong>Complaint ID:</strong>{' '}
-            {result.id}
-          </p>
+    <p>
+      {result.description}
+    </p>
 
-          <p>
-            <strong>Location:</strong>{' '}
-            {result.location || 'Not provided'}
-          </p>
+    <p>
+      <strong>Complaint ID:</strong>{" "}
+      {result.id}
+    </p>
 
-          <p>
-            <strong>Department:</strong>{' '}
-            {result.department || 'Not assigned'}
-          </p>
+    <p>
+      <strong>Location:</strong>{" "}
+      {result.location || "Not provided"}
+    </p>
 
-          <p>
-            <strong>Priority:</strong>{' '}
-            {result.priority || 'LOW'}
-          </p>
+    <p>
+      <strong>Department:</strong>{" "}
+      {result.department || "Not assigned"}
+    </p>
 
-          <p>
-            <strong>Submitted On:</strong>{' '}
-            {result.createdAt
-              ? new Date(
-                  result.createdAt
-                ).toLocaleString()
-              : 'Not available'}
-          </p>
+    <p>
+      <strong>Priority:</strong>{" "}
+      {result.priority || "LOW"}
+    </p>
 
-          <span
-            className={getStatusClass(
-              result.status
-            )}
-          >
-            {result.status || 'Pending'}
-          </span>
+    <p>
+      <strong>Submitted On:</strong>{" "}
+      {result.createdAt
+        ? new Date(result.createdAt).toLocaleString()
+        : "Not available"}
+    </p>
+
+    <span
+      className={getStatusClass(result.status)}
+    >
+      {result.status || "Pending"}
+    </span>
+
+
+    {/* STATUS TIMELINE */}
+
+    <div className="status-timeline">
+
+      <div className="timeline-step completed">
+        <div className="timeline-icon">✓</div>
+
+        <div>
+          <strong>Submitted</strong>
+          <small>Complaint received</small>
         </div>
-      )}
+      </div>
+
+
+      <div
+        className={
+          result.status === "In Progress" ||
+          result.status === "Resolved"
+            ? "timeline-step completed"
+            : "timeline-step"
+        }
+      >
+        <div className="timeline-icon">🔄</div>
+
+        <div>
+          <strong>In Progress</strong>
+          <small>Department is working</small>
+        </div>
+      </div>
+
+
+      <div
+        className={
+          result.status === "Resolved"
+            ? "timeline-step completed"
+            : "timeline-step"
+        }
+      >
+        <div className="timeline-icon">✓</div>
+
+        <div>
+          <strong>Resolved</strong>
+          <small>Issue successfully fixed</small>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+)}
     </div>
   );
 }

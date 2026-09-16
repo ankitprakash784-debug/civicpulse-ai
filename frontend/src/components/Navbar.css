@@ -61,3 +61,34 @@
 .navbar-links a:hover::after {
   width: 100%;
 }
+/* Futuristic CivicPulse Navbar */
+
+.navbar {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(5, 10, 25, 0.92),
+      rgba(10, 18, 38, 0.82),
+      rgba(8, 10, 28, 0.92)
+    );
+
+  border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.18);
+}
+
+.navbar-logo {
+  text-shadow:
+    0 0 18px rgba(56, 189, 248, 0.18);
+}
+
+.navbar-links a:hover {
+  text-shadow:
+    0 0 12px rgba(56, 189, 248, 0.35);
+}
+
+.navbar-links a::after {
+  box-shadow:
+    0 0 8px rgba(56, 189, 248, 0.45);
+}

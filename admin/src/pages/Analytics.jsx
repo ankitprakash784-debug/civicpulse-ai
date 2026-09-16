@@ -206,7 +206,28 @@ function Analytics({ onNavigate }) {
       ? "resolution-selected"
       : ""
   }
->
+><div className="resolution-extra">
+
+  <div className="avg-resolution">
+    <span>⚡ Average Resolution Time</span>
+    <strong>2.4 Days</strong>
+    <small>Based on resolved complaints</small>
+  </div>
+
+  <div className="resolution-target">
+    <div className="target-header">
+      <span>Resolution Target</span>
+      <strong>75%</strong>
+    </div>
+
+    <div className="target-bar">
+      <div className="target-fill"></div>
+    </div>
+
+    <small>Current: 57% • Target: 75%</small>
+  </div>
+
+</div>
   <span className="dot resolved-dot"></span>
   Resolved: <strong>140</strong>
 </p>

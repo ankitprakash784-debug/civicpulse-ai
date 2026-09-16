@@ -26,11 +26,34 @@ function ReportIssue() {
   const [duplicateLoading, setDuplicateLoading] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  const getCurrentLocation = () => {
+  if (!navigator.geolocation) {
+    alert('Geolocation is not supported by your browser.');
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const { latitude, longitude } = position.coords;
+
+      setFormData((prev) => ({
+        ...prev,
+        location: `${latitude}, ${longitude}`,
+      }));
+    },
+    () => {
+      alert('Location access allow karo, phir dobara 📍 button dabao.');
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0,
+    }
+  );
+};
 
   const handleImageChange = (e) => {
   const file = e.target.files[0];
@@ -334,8 +357,7 @@ const saveResponse = await fetch(
   };
 
   return (
-    <div className="home-container page-fade">
-
+    <div className="report-container page-fade">
       <h1>Report an Issue</h1>
 
       <form
@@ -390,104 +412,43 @@ const saveResponse = await fetch(
           required
         ></textarea>
 
+        <label htmlFor="location">Location</label>
+        <div className="location-input-wrapper">
+  <input
+    type="text"
+    id="location"
+    name="location"
+    placeholder="Enter address or landmark"
+    value={formData.location}
+    onChange={handleChange}
+    required
+  />
 
-        <label htmlFor="location">
-          Location
-        </label>
+  <button
+    type="button"
+    className="location-button"
+    onClick={getCurrentLocation}
+    title="Use my current location"
+  >
+    📍
+  </button>
+</div>
 
-        <input
-          type="text"
-          id="location"
-          name="location"
-          placeholder="Enter address or landmark"
-          value={formData.location}
-          onChange={handleChange}
-          required
-        />
-<button
-  type="button"
-  onClick={() => {
-    if (!navigator.geolocation) {
-      setError("Geolocation is not supported by your browser.");
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-
-        setFormData((prev) => ({
-          ...prev,
-          latitude,
-          longitude,
-        }));
-
-        setError("");
-      },
-      (error) => {
-        console.error("Location error:", error);
-        setError("Unable to get your current location.");
-      }
-    );
-  }}
-  style={{
-  marginTop: "10px",
-  width: "100%",
-  padding: "12px 16px",
-  borderRadius: "10px",
-  border: "1px solid rgba(96, 165, 250, 0.35)",
-  background: "rgba(30, 41, 59, 0.75)",
-  color: "#e2e8f0",
-  cursor: "pointer",
-  fontWeight: "600",
-  fontSize: "14px",
-  transition: "all 0.2s ease",
-  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
-}}
->
-  📍 Use My Current Location
-</button>
-
-{formData.latitude && formData.longitude && (
-  <p style={{ marginTop: "8px", fontSize: "13px", color: "#16a34a" }}>
-    ✅ GPS Location captured
-  </p>
-)}
-
-        <label htmlFor="image">
-          Upload Photo
-        </label>
-
-        <div className="file-upload-box">
-
-          <input
-  type="file"
-  id="image"
-  name="image"
-  accept="image/*"
-  capture="environment"
-  onChange={handleImageChange}
-  required
-/>
-
-          <label
-            htmlFor="image"
-            className="file-upload-label"
-          >
-            <span className="upload-icon">
-              📷
-            </span>
-
-            <span>
-              {image
-                ? image.name
-                : 'Click to upload or drag a photo here'}
-            </span>
-          </label>
-
-        </div>
-
+<label htmlFor="image">Upload Photo</label>
+<div className="file-upload-box">
+  <input
+    type="file"
+    id="image"
+    name="image"
+    accept="image/*"
+    onChange={handleImageChange}
+    required
+  />
+  <label htmlFor="image" className="file-upload-label">
+    <span className="upload-icon">📷</span>
+    <span>{image ? image.name : 'Click to upload or drag a photo here'}</span>
+  </label>
+</div>
 
         {preview && (
           <div className="image-preview">
