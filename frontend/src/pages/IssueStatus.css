@@ -92,3 +92,323 @@
   background-color: rgba(248, 113, 113, 0.15);
   color: #f87171;
 }
+/* ================================
+   CIVICPULSE - TRACK STATUS UPGRADE
+   ================================ */
+
+.status-container {
+  position: relative;
+  max-width: 720px;
+  margin: 55px auto;
+  padding: 42px;
+
+  border-radius: 22px;
+
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(56, 189, 248, 0.09),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at bottom left,
+      rgba(34, 197, 94, 0.08),
+      transparent 35%
+    ),
+    rgba(8, 18, 34, 0.82);
+
+  border: 1px solid rgba(56, 189, 248, 0.16);
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.30);
+
+  backdrop-filter: blur(16px);
+}
+
+
+/* Heading */
+
+.status-container h1 {
+  font-size: 2.3rem;
+  margin-bottom: 10px;
+
+  background: linear-gradient(
+    90deg,
+    #f8fafc,
+    #67e8f9,
+    #a78bfa
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  color: transparent;
+}
+
+
+/* Search Form */
+
+.status-form {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.status-form input {
+  background: rgba(5, 15, 30, 0.70);
+
+  border: 1px solid rgba(100, 160, 210, 0.20);
+
+  border-radius: 12px;
+
+  color: #e8f0fa;
+
+  transition: 0.25s ease;
+}
+
+.status-form input:focus {
+  border-color: #38d9ff;
+
+  box-shadow:
+    0 0 0 3px rgba(56, 189, 248, 0.08),
+    0 0 20px rgba(56, 189, 248, 0.06);
+}
+
+.status-form button {
+  min-width: 110px;
+
+  background:
+    linear-gradient(
+      110deg,
+      #38d9ff,
+      #6366f1,
+      #a855f7
+    );
+
+  color: white;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 8px 25px rgba(59, 130, 246, 0.20);
+
+  transition: 0.25s ease;
+}
+
+.status-form button:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 12px 30px rgba(59, 130, 246, 0.35);
+}
+
+
+/* Complaint Card */
+
+.complaint-card {
+  position: relative;
+
+  padding: 28px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(12, 29, 48, 0.85),
+      rgba(8, 18, 35, 0.75)
+    );
+
+  border: 1px solid rgba(100, 180, 220, 0.18);
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.20);
+}
+
+.complaint-card h2 {
+  font-size: 1.5rem;
+
+  background: linear-gradient(
+    90deg,
+    #67e8f9,
+    #a78bfa
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  color: transparent;
+}
+
+.complaint-card p {
+  color: #91a4bd;
+
+  line-height: 1.6;
+}
+
+
+/* Status */
+
+.status {
+  padding: 8px 18px;
+
+  border-radius: 30px;
+
+  font-size: 0.82rem;
+
+  box-shadow:
+    0 0 15px rgba(255, 255, 255, 0.04);
+}
+
+.status.resolved {
+  background: rgba(34, 197, 94, 0.12);
+  color: #4ade80;
+
+  border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+.status.in-progress {
+  background: rgba(251, 191, 36, 0.12);
+  color: #fbbf24;
+
+  border: 1px solid rgba(251, 191, 36, 0.25);
+}
+
+.status.pending {
+  background: rgba(248, 113, 113, 0.12);
+  color: #f87171;
+
+  border: 1px solid rgba(248, 113, 113, 0.25);
+}
+
+
+/* Not Found */
+
+.not-found {
+  padding: 12px 15px;
+
+  border-radius: 10px;
+
+  background: rgba(248, 113, 113, 0.08);
+
+  border: 1px solid rgba(248, 113, 113, 0.15);
+}
+/* ================================
+   STATUS TIMELINE - FIXED
+   ================================ */
+
+.status-timeline {
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.timeline-step {
+  position: relative;
+
+  display: flex !important;
+  align-items: flex-start !important;
+
+  gap: 14px;
+
+  min-height: 70px;
+
+  opacity: 0.45;
+}
+
+.timeline-step.completed {
+  opacity: 1;
+}
+
+/* Text ko vertical rakho */
+.timeline-step > div:last-child {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+/* Connecting line */
+.timeline-step:not(:last-child)::after {
+  content: "";
+
+  position: absolute;
+
+  left: 17px;
+  top: 38px;
+
+  width: 2px;
+  height: 45px;
+
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.timeline-step.completed:not(:last-child)::after {
+  background: linear-gradient(
+    180deg,
+    #38d9ff,
+    #22c55e
+  );
+}
+
+/* Circle */
+.timeline-icon {
+  position: relative;
+  z-index: 2;
+
+  width: 36px;
+  height: 36px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.06);
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+
+  font-size: 16px;
+}
+
+.timeline-step.completed .timeline-icon {
+  background: linear-gradient(
+    135deg,
+    #38d9ff,
+    #6366f1
+  );
+
+  border-color: transparent;
+
+  box-shadow:
+    0 0 18px rgba(56, 189, 248, 0.25);
+}
+
+/* Title */
+.timeline-step strong {
+  display: block !important;
+
+  color: #e8f0fa;
+
+  font-size: 15px;
+
+  margin: 0;
+}
+
+/* Description */
+.timeline-step small {
+  display: block !important;
+
+  color: #8193ad;
+
+  font-size: 12px;
+
+  margin: 0;
+}

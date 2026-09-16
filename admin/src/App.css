@@ -3629,3 +3629,1273 @@ body {
 .dark-mode .circle-progress span {
   color: #9caaca;
 }
+/* =========================
+   DARK MODE TEXT FIX
+========================= */
+
+.dark-mode {
+  color: #f8fafc;
+}
+
+/* Main headings */
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode h5,
+.dark-mode h6 {
+  color: #f8fafc;
+}
+
+/* Normal text */
+.dark-mode p {
+  color: #cbd5e1;
+}
+
+/* Small / secondary text */
+.dark-mode small,
+.dark-mode span {
+  color: #cbd5e1;
+}
+
+/* Stat cards */
+.dark-mode .stat-card h3,
+.dark-mode .stat-card strong,
+.dark-mode .stat-card span {
+  color: #f8fafc;
+}
+
+.dark-mode .stat-card p {
+  color: #94a3b8;
+}
+
+/* Issue location section */
+.dark-mode .issue-locations,
+.dark-mode .issue-card,
+.dark-mode .recent-issues,
+.dark-mode .recent-issue-card {
+  color: #f8fafc;
+}
+
+.dark-mode .issue-card h3,
+.dark-mode .issue-card strong {
+  color: #f8fafc;
+}
+
+.dark-mode .issue-card p,
+.dark-mode .issue-card span {
+  color: #cbd5e1;
+}
+
+/* Page titles */
+.dark-mode .page-title h2 {
+  color: #ffffff;
+}
+
+.dark-mode .page-title p {
+  color: #94a3b8;
+}
+
+/* Sidebar */
+.dark-mode .sidebar h1,
+.dark-mode .sidebar h2,
+.dark-mode .sidebar h3,
+.dark-mode .sidebar span,
+.dark-mode .sidebar p {
+  color: #f8fafc;
+}
+
+/* Analytics */
+.dark-mode .analytics-section h3 {
+  color: #f8fafc;
+}
+
+.dark-mode .analytics-section p,
+.dark-mode .analytics-section span,
+.dark-mode .analytics-section small {
+  color: #cbd5e1;
+}
+
+/* Reports */
+.dark-mode .reports-page h2,
+.dark-mode .reports-page h3,
+.dark-mode .reports-page td,
+.dark-mode .reports-page th {
+  color: #f8fafc;
+}
+
+.dark-mode .reports-page p,
+.dark-mode .reports-page small {
+  color: #cbd5e1;
+}
+
+/* Profile */
+.dark-mode .profile-card h2,
+.dark-mode .profile-card h3,
+.dark-mode .profile-card strong {
+  color: #17213d;
+}
+/* =========================
+   ISSUE LOCATIONS DARK MODE
+========================= */
+
+.dark-mode h2 {
+  color: #f8fafc !important;
+}
+
+.dark-mode h3 {
+  color: #f8fafc !important;
+}
+
+.dark-mode .issue-locations p,
+.dark-mode .issue-locations span {
+  color: #cbd5e1 !important;
+}
+
+/* Issue Locations subtitle */
+.dark-mode .issue-locations > p {
+  color: #cbd5e1 !important;
+}
+/* =========================
+   RECENT CIVIC ISSUES
+   DARK MODE FIX
+========================= */
+
+.dark-mode .recent-issues {
+  color: #f8fafc;
+}
+
+/* Section heading */
+.dark-mode .recent-issues h2,
+.dark-mode .recent-issues h3 {
+  color: #ffffff !important;
+}
+
+/* Table header */
+.dark-mode .recent-issues th {
+  color: #cbd5e1 !important;
+  background: #182238 !important;
+}
+
+/* Table body text */
+.dark-mode .recent-issues td {
+  color: #f1f5f9 !important;
+}
+
+/* Issue names */
+.dark-mode .recent-issues td strong {
+  color: #f8fafc !important;
+}
+
+/* Location text */
+.dark-mode .recent-issues td:nth-child(2) {
+  color: #cbd5e1 !important;
+}
+
+/* Priority badges */
+.dark-mode .recent-issues td:nth-child(3) {
+  color: #f8fafc !important;
+}
+
+/* Status badges */
+.dark-mode .recent-issues td:nth-child(4) {
+  color: #ffffff !important;
+}
+
+/* Pending */
+.dark-mode .recent-issues .pending {
+  color: #fbbf24 !important;
+}
+
+/* In Progress */
+.dark-mode .recent-issues .in-progress {
+  color: #60a5fa !important;
+}
+
+/* Resolved */
+.dark-mode .recent-issues .resolved {
+  color: #4ade80 !important;
+}
+
+/* View All button */
+.dark-mode .recent-issues button {
+  color: #4f46e5 !important;
+}
+
+/* Table borders */
+.dark-mode .recent-issues tr {
+  border-color: #334155 !important;
+}
+/* =================================
+   RECENT CIVIC ISSUES - DARK MODE
+   FINAL TEXT FIX
+================================= */
+
+.dark-mode .reports-section .section-header h3 {
+  color: #ffffff !important;
+}
+
+.dark-mode .reports-section .table-header span {
+  color: #cbd5e1 !important;
+}
+
+/* Issue + Location */
+.dark-mode .reports-section .table-row > span:nth-child(1),
+.dark-mode .reports-section .table-row > span:nth-child(2) {
+  color: #f1f5f9 !important;
+}
+
+/* Priority - High */
+.dark-mode .reports-section .priority-high {
+  color: #ff4d4d !important;
+  background: rgba(255, 77, 77, 0.18) !important;
+}
+
+/* Priority - Medium */
+.dark-mode .reports-section .priority-medium {
+  color: #fbbf24 !important;
+  background: rgba(251, 191, 36, 0.18) !important;
+}
+
+/* Pending */
+.dark-mode .reports-section .pending-status {
+  color: #fbbf24 !important;
+  background: rgba(251, 191, 36, 0.14) !important;
+}
+
+/* In Progress */
+.dark-mode .reports-section .progress-status {
+  color: #60a5fa !important;
+  background: rgba(96, 165, 250, 0.14) !important;
+}
+
+/* Resolved */
+.dark-mode .reports-section .resolved-status {
+  color: #4ade80 !important;
+  background: rgba(74, 222, 128, 0.14) !important;
+}
+
+/* View All */
+.dark-mode .reports-section .view-button {
+  color: #4f46e5 !important;
+  background: #eef2ff !important;
+}
+/* =========================================
+   RECENT CIVIC ISSUES - FINAL DARK MODE FIX
+========================================= */
+
+.dark-mode .reports-section .table-row span {
+  color: #f8fafc !important;
+}
+
+/* Issue */
+.dark-mode .reports-section .table-row span:nth-child(1) {
+  color: #f8fafc !important;
+}
+
+/* Location */
+.dark-mode .reports-section .table-row span:nth-child(2) {
+  color: #cbd5e1 !important;
+}
+
+/* Priority - High */
+.dark-mode .reports-section .table-row .priority-high {
+  color: #ff4d4d !important;
+  background: rgba(255, 77, 77, 0.18) !important;
+}
+
+/* Priority - Medium */
+.dark-mode .reports-section .table-row .priority-medium {
+  color: #fbbf24 !important;
+  background: rgba(251, 191, 36, 0.18) !important;
+}
+
+/* Status - Pending */
+.dark-mode .reports-section .table-row .pending-status {
+  color: #fbbf24 !important;
+  background: rgba(251, 191, 36, 0.14) !important;
+}
+
+/* Status - In Progress */
+.dark-mode .reports-section .table-row .progress-status {
+  color: #60a5fa !important;
+  background: rgba(96, 165, 250, 0.14) !important;
+}
+
+/* Status - Resolved */
+.dark-mode .reports-section .table-row .resolved-status {
+  color: #4ade80 !important;
+  background: rgba(74, 222, 128, 0.14) !important;
+}
+
+/* Table Header */
+.dark-mode .reports-section .table-header span {
+  color: #cbd5e1 !important;
+}
+
+/* Section Heading */
+.dark-mode .reports-section .section-header h3 {
+  color: #ffffff !important;
+}
+/* =========================================
+   RECENT CIVIC ISSUES - DARK MODE FINAL
+========================================= */
+
+/* Main section */
+.dark-mode .reports-section {
+  color: #f8fafc;
+}
+
+/* Heading */
+.dark-mode .reports-section .section-header h3 {
+  color: #ffffff !important;
+}
+
+/* Table container */
+.dark-mode .reports-section .report-table {
+  background: #111827 !important;
+  border: 1px solid #263451 !important;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+/* Table header */
+.dark-mode .reports-section .table-header {
+  background: #1a253b !important;
+  border-bottom: 1px solid #334155 !important;
+}
+
+.dark-mode .reports-section .table-header span {
+  color: #cbd5e1 !important;
+}
+
+/* Table rows */
+.dark-mode .reports-section .table-row {
+  background: #111827 !important;
+  border-bottom: 1px solid #334155 !important;
+}
+
+/* Last row */
+.dark-mode .reports-section .table-row:last-child {
+  border-bottom: none !important;
+}
+
+/* Issue text */
+.dark-mode .reports-section .table-row > span:first-child {
+  color: #f8fafc !important;
+}
+
+/* Location text */
+.dark-mode .reports-section .table-row > span:nth-child(2) {
+  color: #cbd5e1 !important;
+}
+
+/* Priority - High */
+.dark-mode .reports-section .priority-high {
+  color: #ff5555 !important;
+  background: rgba(255, 77, 77, 0.18) !important;
+}
+
+/* Priority - Medium */
+.dark-mode .reports-section .priority-medium {
+  color: #fbbf24 !important;
+  background: rgba(251, 191, 36, 0.18) !important;
+}
+
+/* Pending */
+.dark-mode .reports-section .pending-status {
+  color: #fbbf24 !important;
+  background: rgba(251, 191, 36, 0.16) !important;
+}
+
+/* In Progress */
+.dark-mode .reports-section .progress-status {
+  color: #60a5fa !important;
+  background: rgba(59, 130, 246, 0.16) !important;
+}
+
+/* Resolved */
+.dark-mode .reports-section .resolved-status {
+  color: #4ade80 !important;
+  background: rgba(34, 197, 94, 0.16) !important;
+}
+
+/* View All */
+.dark-mode .reports-section .view-button {
+  color: #4f46e5 !important;
+  background: #eef2ff !important;
+}
+/* ================================
+   REPORTS - DARK MODE FIX
+================================ */
+
+.dark-mode .reports-page {
+  color: #f8fafc;
+}
+
+.dark-mode .reports-page .page-title h2 {
+  color: #ffffff;
+}
+
+.dark-mode .reports-page .page-title p {
+  color: #b8c4d9;
+}
+
+/* Search */
+.dark-mode .report-filters input {
+  background: #192238;
+  color: #ffffff;
+  border: 1px solid #33415f;
+}
+
+.dark-mode .report-filters input::placeholder {
+  color: #9aa8bf;
+}
+
+/* Filter button */
+.dark-mode .status-filter-button {
+  background: #192238;
+  color: #ffffff;
+  border: 1px solid #33415f;
+}
+
+.dark-mode .filter-arrow,
+.dark-mode .filter-icon {
+  color: #c7d2fe;
+}
+
+/* Reports table */
+.dark-mode .all-reports {
+  background: #111827;
+  border: 1px solid #33415f;
+}
+
+/* Table header */
+.dark-mode .report-header {
+  background: #1d2940;
+  color: #ffffff;
+  border-bottom: 1px solid #40506d;
+}
+
+.dark-mode .report-header span {
+  color: #dbe5f5;
+}
+
+/* Table rows */
+.dark-mode .report-item {
+  background: #111827;
+  color: #ffffff;
+  border-bottom: 1px solid #33415f;
+}
+
+.dark-mode .report-item > span {
+  color: #f8fafc;
+}
+
+/* Location text */
+.dark-mode .report-item > span:nth-child(2) {
+  color: #cbd5e1;
+}
+
+/* Priority badges */
+.dark-mode .priority-badge.high {
+  background: #47212b;
+  color: #ff6b6b;
+}
+
+.dark-mode .priority-badge.medium {
+  background: #403821;
+  color: #ffc533;
+}
+
+.dark-mode .priority-badge.low {
+  background: #18352c;
+  color: #4ade80;
+}
+
+/* Status text */
+.dark-mode .report-item .status {
+  color: #ffffff;
+}
+
+/* Status backgrounds */
+.dark-mode .report-item .pending-status {
+  background: #403821;
+  color: #ffc533;
+}
+
+.dark-mode .report-item .progress-status {
+  background: #193457;
+  color: #60a5fa;
+}
+
+.dark-mode .report-item .resolved-status {
+  background: #17392f;
+  color: #4ade80;
+}
+
+/* View Details button */
+.dark-mode .details-button {
+  background: #4f46e5;
+  color: #ffffff;
+  border: 1px solid #6366f1;
+}
+
+.dark-mode .details-button:hover {
+  background: #6366f1;
+  color: #ffffff;
+}
+
+/* Dropdown */
+.dark-mode .custom-dropdown {
+  background: #192238;
+  border: 1px solid #33415f;
+}
+
+.dark-mode .dropdown-option {
+  color: #e5e7eb;
+  background: transparent;
+}
+
+.dark-mode .dropdown-option:hover {
+  background: #273451;
+  color: #ffffff;
+}
+
+.dark-mode .active-option {
+  background: #273451;
+  color: #ffffff;
+}
+/* =================================
+   ALL REPORTS - STATUS COLUMN
+   DARK MODE
+================================= */
+
+.dark-mode .all-reports .report-item .status {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 115px;
+  min-height: 42px;
+  padding: 10px 18px;
+
+  border-radius: 25px;
+
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+
+  color: #ffffff !important;
+}
+
+/* Pending */
+.dark-mode .all-reports .report-item .status.pending-status {
+  background: #40351d !important;
+  color: #ffc533 !important;
+  border: 1px solid #6b571c !important;
+}
+
+/* In Progress */
+.dark-mode .all-reports .report-item .status.progress-status {
+  background: #172f50 !important;
+  color: #60a5fa !important;
+  border: 1px solid #285489 !important;
+}
+
+/* Resolved */
+.dark-mode .all-reports .report-item .status.resolved-status {
+  background: #14382d !important;
+  color: #4ade80 !important;
+  border: 1px solid #216149 !important;
+}
+
+/* Status hover */
+.dark-mode .all-reports .report-item .status:hover {
+  transform: translateY(-1px);
+  transition: 0.2s ease;
+}
+/* =================================
+   ALL REPORTS STATUS - FINAL FIX
+================================= */
+
+.dark-mode .all-reports .report-item > .status {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: 105px !important;
+  min-width: 105px !important;
+  height: 42px !important;
+  min-height: 42px !important;
+
+  padding: 0 12px !important;
+  margin: 0 !important;
+
+  border-radius: 22px !important;
+
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+
+  color: #ffffff !important;
+  box-sizing: border-box !important;
+}
+
+/* Pending */
+.dark-mode .all-reports .report-item:nth-child(2) > .status {
+  background: #40351d !important;
+  color: #ffc533 !important;
+  border: 1px solid #6b571c !important;
+}
+
+/* In Progress */
+.dark-mode .all-reports .report-item:nth-child(3) > .status {
+  background: #172f50 !important;
+  color: #60a5fa !important;
+  border: 1px solid #285489 !important;
+}
+
+/* Resolved */
+.dark-mode .all-reports .report-item:nth-child(4) > .status {
+  background: #14382d !important;
+  color: #4ade80 !important;
+  border: 1px solid #216149 !important;
+}
+/* Water Leakage - Pending Status */
+.dark-mode .all-reports .report-item:last-child > .pending-status {
+  width: 105px !important;
+  min-width: 105px !important;
+  height: 42px !important;
+  min-height: 42px !important;
+
+  padding: 0 12px !important;
+  border-radius: 22px !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  background: #40351d !important;
+  color: #ffc533 !important;
+
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  box-sizing: border-box !important;
+}
+/* 4th Row - Water Leakage Pending */
+.dark-mode .all-reports .report-item:nth-child(5) .pending-status {
+  width: 105px !important;
+  min-width: 105px !important;
+  height: 42px !important;
+  min-height: 42px !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  padding: 0 !important;
+  border-radius: 22px !important;
+  box-sizing: border-box !important;
+
+  background: #40351d !important;
+  border: 1px solid #6b571c !important;
+
+  color: #ffc533 !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+}
+/* Fix 4th row Pending badge in dark mode */
+.dark-mode .all-reports .report-item:last-child > .status {
+  width: 105px !important;
+  min-width: 105px !important;
+  height: 42px !important;
+  min-height: 42px !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  padding: 0 12px !important;
+  box-sizing: border-box !important;
+
+  border-radius: 22px !important;
+
+  background: #40351d !important;
+  border: 1px solid #6b571c !important;
+  color: #ffc533 !important;
+
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+}
+/* Analytics numbers - Dark Mode */
+.dark-mode .analytics-card strong {
+  color: #ffffff !important;
+  font-size: 36px !important;
+  font-weight: 800 !important;
+  opacity: 1 !important;
+}
+/* Analytics - Issue Distribution Dark Mode */
+.dark-mode .analytics-section {
+  color: #f8fafc !important;
+}
+
+.dark-mode .analytics-section h3 {
+  color: #ffffff !important;
+}
+
+.dark-mode .issue-bar {
+  color: #f8fafc !important;
+}
+
+.dark-mode .issue-bar span {
+  color: #dbe5f5 !important;
+}
+
+.dark-mode .issue-bar strong {
+  color: #ffffff !important;
+}
+
+.dark-mode .selected-issue {
+  color: #f8fafc !important;
+}
+
+.dark-mode .selected-issue strong {
+  color: #ffffff !important;
+}
+/* Analytics Sections - Dark Mode */
+.dark-mode .analytics-section {
+  background: #111827 !important;
+  color: #f8fafc !important;
+  border: 1px solid #263451 !important;
+}
+
+.dark-mode .analytics-section h3 {
+  color: #ffffff !important;
+}
+
+/* Issue Distribution text */
+.dark-mode .issue-bar span {
+  color: #dbe5f5 !important;
+}
+
+.dark-mode .issue-bar strong {
+  color: #ffffff !important;
+}
+
+/* Resolution Performance */
+.dark-mode .resolution-box {
+  background: #111827 !important;
+  color: #f8fafc !important;
+}
+
+.dark-mode .resolution-info p {
+  color: #dbe5f5 !important;
+}
+
+.dark-mode .resolution-info strong {
+  color: #ffffff !important;
+}
+/* Fix tooltip in dark mode */
+.dark-mode .issue-bar [title]:hover::after {
+  background: #1f2937 !important;
+  color: #ffffff !important;
+  border: 1px solid #334155 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+/* Fix Issue Distribution hover in dark mode */
+.dark-mode .issue-bar:hover {
+  background: #1f2937 !important;
+  color: #ffffff !important;
+  transform: translateX(4px);
+}
+
+.dark-mode .issue-bar:hover .issue-label span {
+  color: #ffffff !important;
+}
+
+.dark-mode .issue-bar:hover .issue-label strong {
+  color: #ffffff !important;
+}
+/* Resolution Performance hover - Dark Mode */
+.dark-mode .resolution-info p:hover {
+  background: #1f2937 !important;
+  color: #ffffff !important;
+}
+
+.dark-mode .resolution-info p:hover strong {
+  color: #ffffff !important;
+}
+/* Selected Issue - Dark Mode */
+.dark-mode .selected-issue {
+  background: #1f2937 !important;
+  border: 1px solid #334155 !important;
+  color: #e5e7eb !important;
+}
+
+.dark-mode .selected-issue strong {
+  color: #ffffff !important;
+}
+
+.dark-mode .selected-issue button {
+  background: #111827 !important;
+  color: #a5b4fc !important;
+  border: 1px solid #6366f1 !important;
+}
+
+.dark-mode .selected-issue button:hover {
+  background: #312e81 !important;
+  color: #ffffff !important;
+}
+/* =================================
+   REPORT DETAILS - DARK MODE
+   ================================= */
+
+.dark-mode .details-panel {
+  background: #111827 !important;
+  color: #f8fafc !important;
+  border: 1px solid #334155 !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35) !important;
+}
+
+.dark-mode .details-header h2 {
+  color: #ffffff !important;
+}
+
+.dark-mode .details-content h3 {
+  color: #ffffff !important;
+}
+
+.dark-mode .details-content p {
+  color: #cbd5e1 !important;
+}
+
+.dark-mode .details-content strong {
+  color: #ffffff !important;
+}
+
+/* Close button */
+.dark-mode .close-button {
+  background: #1f2937 !important;
+  color: #e2e8f0 !important;
+  border: 1px solid #334155 !important;
+}
+
+.dark-mode .close-button:hover {
+  background: #334155 !important;
+  color: #ffffff !important;
+}
+
+/* Summary cards */
+.dark-mode .issue-summary-cards {
+  background: #172033 !important;
+  border: 1px solid #334155 !important;
+}
+
+.dark-mode .issue-summary-card {
+  background: #1f2937 !important;
+  border: 1px solid #334155 !important;
+}
+
+.dark-mode .summary-content span {
+  color: #94a3b8 !important;
+}
+
+.dark-mode .summary-content strong {
+  color: #ffffff !important;
+}
+
+/* Status section */
+.dark-mode .status-update {
+  color: #f8fafc !important;
+}
+
+.dark-mode .status-update strong {
+  color: #ffffff !important;
+}
+
+.dark-mode .status-update select {
+  background: #1f2937 !important;
+  color: #ffffff !important;
+  border: 1px solid #475569 !important;
+}
+
+.dark-mode .status-update option {
+  background: #1f2937 !important;
+  color: #ffffff !important;
+}
+
+/* Save Status button */
+.dark-mode .save-status-button {
+  color: #ffffff !important;
+}
+/* =================================
+   AI RESOLUTION VERIFICATION - DARK
+   ================================= */
+
+.dark-mode .ai-verification {
+  background: #111827 !important;
+  border: 1px solid #334155 !important;
+  color: #f8fafc !important;
+}
+
+.dark-mode .ai-verification h3 {
+  color: #ffffff !important;
+}
+
+/* Photo cards */
+.dark-mode .verification-photos .photo-box {
+  background: #1f2937 !important;
+  border: 1px solid #334155 !important;
+}
+
+.dark-mode .photo-placeholder {
+  background: #172033 !important;
+  border: 2px dashed #475569 !important;
+  color: #cbd5e1 !important;
+}
+
+.dark-mode .photo-box h4 {
+  color: #ffffff !important;
+}
+
+.dark-mode .photo-box p {
+  color: #94a3b8 !important;
+}
+
+/* Upload buttons */
+.dark-mode .photo-upload-button {
+  background: #1e293b !important;
+  border: 1px solid #6366f1 !important;
+  color: #818cf8 !important;
+}
+
+.dark-mode .photo-upload-button:hover {
+  background: #273451 !important;
+  color: #a5b4fc !important;
+}
+
+/* Verification status */
+.dark-mode .verification-result {
+  background: #172033 !important;
+  border: 1px solid #334155 !important;
+}
+
+.dark-mode .verification-result > span {
+  color: #cbd5e1 !important;
+}
+
+.dark-mode .verification-result strong {
+  color: #ffffff !important;
+}
+
+.dark-mode .verification-result p {
+  color: #cbd5e1 !important;
+}
+
+.dark-mode .verification-result small {
+  color: #94a3b8 !important;
+}
+
+/* Verify button */
+.dark-mode .verify-button {
+  background: #334155 !important;
+  color: #cbd5e1 !important;
+  border: none !important;
+}
+
+.dark-mode .verify-button:not(:disabled) {
+  background: linear-gradient(135deg, #38bdf8, #6366f1) !important;
+  color: #ffffff !important;
+}
+
+.dark-mode .verify-button:disabled {
+  opacity: 0.75 !important;
+}
+/* =================================
+   ADMIN USER BOX - DARK MODE
+   ================================= */
+
+.dark-mode .admin-user {
+  background: rgba(17, 24, 39, 0.92) !important;
+  border: 1px solid #334155 !important;
+  border-radius: 16px !important;
+  padding: 14px 16px !important;
+  color: #ffffff !important;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+/* Admin name */
+.dark-mode .admin-user {
+  font-weight: 700 !important;
+}
+
+/* View Profile */
+.dark-mode .view-profile-button {
+  background: #1e293b !important;
+  border: 1px solid #6366f1 !important;
+  color: #a5b4fc !important;
+
+  padding: 9px 14px !important;
+  border-radius: 10px !important;
+
+  font-size: 14px !important;
+  font-weight: 700 !important;
+
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.dark-mode .view-profile-button:hover {
+  background: #312e81 !important;
+  color: #ffffff !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Logout */
+.dark-mode .admin-user .logout-button {
+  margin-left: 0 !important;
+  padding: 9px 14px !important;
+
+  border-radius: 10px !important;
+
+  background: #ef4444 !important;
+  color: #ffffff !important;
+
+  font-size: 14px !important;
+  font-weight: 700 !important;
+
+  transition: all 0.2s ease !important;
+}
+
+.dark-mode .admin-user .logout-button:hover {
+  background: #dc2626 !important;
+  transform: translateY(-2px) !important;
+}
+/* =================================
+   ADMIN USER BOX - SAME LAYOUT
+   ================================= */
+
+.admin-user {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+
+/* Admin name */
+.admin-user > :first-child {
+  margin: 0 !important;
+}
+
+/* View Profile button */
+.admin-user .view-profile-button {
+  margin: 0 !important;
+  width: 108px !important;
+  min-height: 76px !important;
+}
+
+/* Logout button */
+.admin-user .logout-button {
+  margin: 0 !important;
+  width: 94px !important;
+  height: 42px !important;
+}
+
+/* Dark mode box */
+.dark-mode .admin-user {
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 14px 16px !important;
+}
+/* =================================
+   ADMIN PROFILE MODAL - DARK MODE
+   ================================= */
+
+.dark-mode .profile-overlay {
+  background: rgba(3, 7, 18, 0.82) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+.dark-mode .profile-card {
+  background: #111827 !important;
+  border: 1px solid #334155 !important;
+  border-radius: 24px !important;
+  color: #f8fafc !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Close button */
+.dark-mode .profile-close {
+  background: #2a1d25 !important;
+  color: #ff6b6b !important;
+  border: 1px solid #5b2933 !important;
+}
+
+.dark-mode .profile-close:hover {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+}
+
+/* Profile avatar */
+.dark-mode .profile-avatar {
+  border: 1px solid #475569 !important;
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.25) !important;
+}
+
+/* Choose Photo */
+.dark-mode .upload-photo-button {
+  background: #1e293b !important;
+  color: #a5b4fc !important;
+  border: 1px solid #4f46e5 !important;
+}
+
+.dark-mode .upload-photo-button:hover {
+  background: #312e81 !important;
+  color: #ffffff !important;
+}
+
+/* Heading */
+.dark-mode .profile-card h2 {
+  color: #ffffff !important;
+}
+
+/* Profile information */
+.dark-mode .profile-info {
+  color: #cbd5e1 !important;
+}
+
+.dark-mode .profile-info p {
+  color: #cbd5e1 !important;
+  border-bottom-color: #334155 !important;
+}
+
+.dark-mode .profile-info strong {
+  color: #ffffff !important;
+}
+
+/* Active status */
+.dark-mode .active-status {
+  background: rgba(34, 197, 94, 0.15) !important;
+  color: #4ade80 !important;
+  border: 1px solid rgba(74, 222, 128, 0.25) !important;
+}
+
+/* Profile input fields */
+.dark-mode .profile-input {
+  background: #1f2937 !important;
+  color: #ffffff !important;
+  border: 1px solid #475569 !important;
+}
+
+/* Edit Profile */
+.dark-mode .edit-profile-button {
+  background: linear-gradient(135deg, #38bdf8, #6366f1) !important;
+  color: #ffffff !important;
+}
+
+.dark-mode .edit-profile-button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3) !important;
+}
+.location-cell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.location-button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+.location-button:hover {
+  background: rgba(59, 130, 246, 0.12);
+}
+
+.location-button:active {
+  transform: scale(0.95);
+}
+/* Resolution Performance - Extra Info */
+
+.resolution-extra {
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
+  width: 100%;
+}
+
+.avg-resolution,
+.resolution-target {
+  flex: 1;
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.avg-resolution {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.avg-resolution span {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.avg-resolution strong {
+  font-size: 24px;
+}
+
+.avg-resolution small,
+.resolution-target small {
+  font-size: 11px;
+  opacity: 0.6;
+}
+
+.target-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.target-header span {
+  font-size: 13px;
+}
+
+.target-header strong {
+  font-size: 16px;
+}
+
+.target-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.target-fill {
+  width: 57%;
+  height: 100%;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #3b82f6, #22c55e);
+}

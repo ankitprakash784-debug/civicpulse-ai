@@ -1,14 +1,19 @@
-import { Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Home from './pages/Home';
-import ReportIssue from './pages/ReportIssue';
-import IssueStatus from './pages/IssueStatus';
-import AdminDashboard from './pages/AdminDashboard';
+import { Routes, Route } from "react-router-dom";
+
+import Navbar from "./components/Navbar";
+
+import Home from "./pages/Home";
+import ReportIssue from "./pages/ReportIssue";
+import IssueStatus from "./pages/IssueStatus";
+import AdminDashboard from "./pages/AdminDashboard";
+
+import "./App.css";
 
 function App() {
   return (
     <>
       <Navbar />
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/report" element={<ReportIssue />} />
