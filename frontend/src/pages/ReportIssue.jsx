@@ -5,10 +5,12 @@ const API_URL = 'http://localhost:5050';
 
 function ReportIssue() {
   const [formData, setFormData] = useState({
-    category: '',
-    description: '',
-    location: '',
-  });
+  category: '',
+  description: '',
+  location: '',
+  latitude: '',
+  longitude: '',
+});
 
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -202,6 +204,15 @@ saveFormData.append(
   'location',
   formData.location
 );
+saveFormData.append(
+  'latitude',
+  formData.latitude
+);
+
+saveFormData.append(
+  'longitude',
+  formData.longitude
+);
 
 saveFormData.append(
   'complaintText',
@@ -393,7 +404,56 @@ const saveResponse = await fetch(
           onChange={handleChange}
           required
         />
+<button
+  type="button"
+  onClick={() => {
+    if (!navigator.geolocation) {
+      setError("Geolocation is not supported by your browser.");
+      return;
+    }
 
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+
+        setFormData((prev) => ({
+          ...prev,
+          latitude,
+          longitude,
+        }));
+
+        setError("");
+      },
+      (error) => {
+        console.error("Location error:", error);
+        setError("Unable to get your current location.");
+      }
+    );
+  }}
+  style={{
+  marginTop: "10px",
+  width: "100%",
+  padding: "12px 16px",
+  borderRadius: "10px",
+  border: "1px solid rgba(96, 165, 250, 0.35)",
+  background: "rgba(30, 41, 59, 0.75)",
+  color: "#e2e8f0",
+  cursor: "pointer",
+  fontWeight: "600",
+  fontSize: "14px",
+  transition: "all 0.2s ease",
+  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
+}}
+>
+  📍 Use My Current Location
+</button>
+
+{formData.latitude && formData.longitude && (
+  <p style={{ marginTop: "8px", fontSize: "13px", color: "#16a34a" }}>
+    ✅ GPS Location captured
+  </p>
+)}
 
         <label htmlFor="image">
           Upload Photo
